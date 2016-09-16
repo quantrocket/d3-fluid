@@ -18,9 +18,11 @@ export default {
             skip: [
                 'd3-collection',
                 'd3-dispatch',
+                'd3-let',
                 'd3-selection',
                 'd3-timer',
-                'd3-transition'
+                'd3-transition',
+                'd3-view'
             ]
         })
     ],
@@ -28,8 +30,10 @@ export default {
     globals: {
         "d3-collection": "d3",
         "d3-dispatch": "d3",
+        "d3-let": "d3",
         "d3-selection": "d3",
         "d3-timer": "d3",
-        "d3-transition": "d3"
+        "d3-transition": "d3",
+        "d3-view": "d3"
     }
 };

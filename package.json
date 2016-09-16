@@ -29,6 +29,7 @@
         "browserify": "13.1",
         "browserify-istanbul": "2.0",
         "concat-files": "0.1",
+        "crossfilter": "1.3",
         "eslint": "3.4",
         "handlebars": "4",
         "istanbul": "0.4",
@@ -56,8 +57,7 @@
     },
     "scripts": {
         "test": "npm run-script unit",
-        "rollup": "rollup -c build/rollup.config.js --banner \"$(preamble)\"",
-        "d3": "rollup -c build/rollup.d3.js",
+        "rollup": "rollup -c build/rollup.config.js --banner \"$(preamble)\" && rollup -c build/rollup.bundle.js --banner \"$(preamble)\"",
         "source": "npm run-script lint && npm run-script rollup && npm run-script cover",
         "build": "npm run-script source && npm run-script minify",
         "cover": "karma start build/karma.cover.js",
