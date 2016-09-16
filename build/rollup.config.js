@@ -1,5 +1,6 @@
 import json from 'rollup-plugin-json';
 import babel from 'rollup-plugin-babel';
+import commonjs from 'rollup-plugin-commonjs';
 import node from 'rollup-plugin-node-resolve';
 
 
@@ -14,6 +15,11 @@ export default {
             babelrc: false,
             presets: ['es2015-rollup']
         }),
+        commonjs({
+            include: [
+                'node_modules/crossfilter/**'
+            ]
+        }),
         node({
             skip: [
                 'd3-collection',
@@ -22,7 +28,8 @@ export default {
                 'd3-selection',
                 'd3-timer',
                 'd3-transition',
-                'd3-view'
+                'd3-view',
+                'crossfilter'
             ]
         })
     ],
