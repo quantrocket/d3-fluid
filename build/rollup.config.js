@@ -7,7 +7,7 @@ export default {
     entry: 'index.js',
     format: 'umd',
     moduleName: 'd3',
-    moduleId: 'd3-view',
+    moduleId: 'd3-fluid',
     plugins: [
         json(),
         babel({
@@ -24,7 +24,7 @@ export default {
             ]
         })
     ],
-    dest: 'dist/d3-view.js',
+    dest: 'dist/d3-fluid.js',
     globals: {
         "d3-collection": "d3",
         "d3-dispatch": "d3",
