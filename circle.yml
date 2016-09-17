@@ -6,6 +6,7 @@ machine:
 
 dependencies:
   override:
+    - cd .. && git clone git@github.com:quantmind/d3-view.git
     - npm install
 
 

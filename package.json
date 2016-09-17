@@ -19,7 +19,7 @@
     "module": "index",
     "jsnext:main": "index",
     "dependencies": {
-        "d3-view": "quantmind/d3-view"
+        "d3-view": "../d3-view"
     },
     "devDependencies": {
         "babel-eslint": "6.1",
