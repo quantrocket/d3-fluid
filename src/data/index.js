@@ -1,6 +1,6 @@
 import cf from 'crossfilter/crossfilter';
 import {map} from 'd3-collection';
-import {assign, isString} from 'd3-let';
+import {assign} from 'd3-let';
 
 import providerDefaults from './provider';
 
