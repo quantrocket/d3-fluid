@@ -37,6 +37,11 @@ DataStore.prototype = dataStore.prototype = {
     // set or get a new data provider
     provider (name, provider) {
         if (arguments.length === 1) return this.$providers.get(name);
+        if (provider === null) {
+            var p = this.$providers.get(name);
+            this.$providers.remove(name);
+            return p;
+        }
         provider = assign({}, providerDefaults, provider);
         this.$providers.set(name, provider);
         return this;
