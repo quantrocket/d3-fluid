@@ -35,10 +35,11 @@
         "d3-voronoi": "1.0",
         "d3-zoom": "1.0",
         "d3-canvas-transition": "quantmind/d3-canvas-transition",
-        "d3-view": "quantmind/d3-view"
+        "d3-view": "../d3-view"
     },
     "devDependencies": {
         "babel-eslint": "6.1",
+        "babel-plugin-transform-async-to-generator": "6.8",
         "babel-preset-es2015": "6.14",
         "babel-preset-es2015-rollup": "rollup/babel-preset-es2015-rollup",
         "babelify": "7.3",

@@ -1,10 +1,8 @@
-import cf from 'crossfilter/crossfilter';
 import {map} from 'd3-collection';
-import {assign} from 'd3-let';
+import {assign, isPromise, isArray} from 'd3-let';
+import {viewWarn} from 'd3-view';
 
-import providerDefaults from './provider';
-
-const dkey = 'default';
+import defaultProvider from './provider';
 
 
 function dataStore (vm) {
@@ -14,24 +12,15 @@ function dataStore (vm) {
 
 
 function DataStore (vm) {
-    this.$map = map();
     this.$providers = map();
     this.$vm = vm;
-    this.$map.set(dkey, cf.crossfilter());
 }
 
 
 DataStore.prototype = dataStore.prototype = {
 
-    // add an entry to the datastore
-    add (entry, key) {
-        var cf = this.$map.get(key || dkey);
-        if (cf) cf.add(entry);
-        return this;
-    },
-
     size () {
-        return this.$map.size();
+        return this.$providers.size();
     },
 
     // set or get a new data provider
@@ -42,9 +31,25 @@ DataStore.prototype = dataStore.prototype = {
             this.$providers.remove(name);
             return p;
         }
-        provider = assign({}, providerDefaults, provider);
+        provider = assign({}, defaultProvider, provider);
+        provider.init();
         this.$providers.set(name, provider);
         return this;
+    },
+
+    getList (name, params) {
+        var provider = this.$providers.get(name) || defaultProvider,
+            result = provider.getList(params);
+
+        if (!isPromise(result)) result = new Promise((resolve) => {resolve(result);});
+        return result.then((data) => {
+            if (!isArray(data)) {
+                viewWarn(`Excepted an array, got ${typeof data}`);
+                data = [];
+            }
+            provider.add(data);
+            return data;
+        });
     }
 };
 

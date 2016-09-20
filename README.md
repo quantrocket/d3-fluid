@@ -28,7 +28,7 @@ If you use [NPM](https://www.npmjs.com/package/d3-fluid), ``npm install d3-fluid
 Otherwise, download the latest release.
 AMD, CommonJS, and vanilla environments are supported. In vanilla, a d3 global is exported.
 Try [d3-fluid](https://runkit.com/npm/d3-fluid) in your browser.
-```
+```javascript
 <script src="https://assets.fluidily.com/libs/d3-view/latest/d3-view.min.js"></script>
 <script src="https://assets.fluidily.com/libs/d3-fluid/latest/d3-fluid.min.js"></script>
 <script>
@@ -39,23 +39,33 @@ vm.mount('#target');
 </script>
 ```
 
-### API Reference
+## API Reference
 
-## Components
+### Components
 
-## dataStore
+### dataStore
 
-The datastore object is the core of the data retrieval and manipulation:
-```
+The datastore object is at the core of the data retrieval and manipulation:
+```javascript
 var ds = d3.dataStore();
 ```
+It contains a mapping of data provided by one or more data providers.
+
+<a name="user-content-datastore-size" href="#datastore-size">#</a> dataStore.<b>size</b>()
+
+Number of data providers registered with this data store.
 
 <a name="user-content-datastore-provider" href="#datastore-provider">#</a> dataStore.<b>provider</b>(<i>name</i>, [<i>provider</i>])
 
 If *provider* is specified, sets a new provider for the specified *name* and return this dataStore.
-If a provider was already registered for the same *name*, the existiung provider is removed. If
+If a provider was already registered for the same *name*, the existing provider is removed. If
 *provider* is *null*, removes the current provider for the specified *name*, if any.
 If *provider* is not specified, returns the provider registered with *name* if any.
 
+<a name="user-content-datastore-getList" href="#datastore-getlist">#</a> dataStore.<b>getlist</b>(<i>name</i>, [<i>params</i>])
+
+Fetch data from a registered data provider at *name* and return a [Promise][].
+If no data provider is registered for the given name, the promise resolve in an empty list.
 
 [Coverage]: https://circleci.com/api/v1/project/quantmind/d3-fluid/latest/artifacts/0/$CIRCLE_ARTIFACTS/coverage/index.html?branch=master&filter=successful
+[Promise]: https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/Promise

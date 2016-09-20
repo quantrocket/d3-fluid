@@ -1,5 +1,12 @@
+import cf from 'crossfilter/crossfilter';
+
+
 // Provider interface
 export default {
+
+    init () {
+        this._cf = cf.crossfilter();
+    },
 
     get () {
 
@@ -8,4 +15,9 @@ export default {
     getList () {
 
     },
+
+    add (data) {
+        this._cf.add(data);
+        return data;
+    }
 };
