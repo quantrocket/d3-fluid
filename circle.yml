@@ -7,6 +7,7 @@ machine:
 dependencies:
   override:
     - cd .. && git clone git@github.com:quantmind/d3-view.git
+    - cd .. && git clone git@github.com:quantmind/d3-canvas-transition.git
     - npm install
 
 
