@@ -7,6 +7,7 @@ describe('dataStore', () => {
         var store = dataStore();
         expect(store.size()).toBe(1);
         expect(store.provider('foo')).toBe(undefined);
+        expect(store.provider('foo', {})).toBe(store);
     });
 
 });
