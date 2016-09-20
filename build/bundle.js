@@ -1,6 +1,5 @@
 export {
-    listPlugin,
-    dataStore
+    fluid
 } from '../';
 
 
