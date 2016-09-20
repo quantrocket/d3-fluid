@@ -1,10 +1,11 @@
+import './utils';
 import {dataStore} from '../';
 
 
 describe('dataStore', () => {
 
 
-    it('test simple', () => {
+    it('test registration', () => {
         var store = dataStore();
         expect(store.size()).toBe(0);
         expect(store.provider('foo')).toBe(undefined);
@@ -18,7 +19,7 @@ describe('dataStore', () => {
     });
 
 
-    it('test provider', async (done) => {
+    it('test simple provider', async (done) => {
         var store = dataStore();
         expect(store.provider('foo', {
             getList () {
@@ -27,7 +28,10 @@ describe('dataStore', () => {
         })).toBe(store);
         expect(store.size()).toBe(1);
         var data = await store.getList('foo');
-        expect(data).toBe([3, 4, 3, 6]);
+        expect(data).toEqual([3, 4, 3, 6]);
+        //
+        data = store.provider('foo');
+        expect(data.size()).toBe(4);
         done();
     });
 

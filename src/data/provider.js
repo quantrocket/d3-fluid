@@ -8,6 +8,10 @@ export default {
         this._cf = cf.crossfilter();
     },
 
+    size () {
+        return this._cf.size();
+    },
+
     get () {
 
     },

@@ -15,9 +15,9 @@ reactive data visualization components.
 
 
 - [Installing](#installing)
-  - [API Reference](#api-reference)
-- [Components](#components)
-- [dataStore](#datastore)
+- [API Reference](#api-reference)
+  - [Components](#components)
+  - [dataStore](#datastore)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
