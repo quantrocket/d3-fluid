@@ -21,7 +21,7 @@
     "dependencies": {
         "crossfilter": "1.3",
         "d3-axis": "1.0",
-        "d3-canvas-transition": "../d3-canvas-transition",
+        "d3-canvas-transition": "quantmind/d3-canvas-transition",
         "d3-brush": "1.0",
         "d3-chord": "1.0",
         "d3-dsv": "1.0",
