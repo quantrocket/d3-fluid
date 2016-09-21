@@ -2,8 +2,8 @@
     "shell": {
         "source": {
             "command": [
-                "npm run-script source",
-                "npm run-script lint"
+                "npm run-script lint",
+                "npm run-script source"
             ],
             "interactive": true
         },

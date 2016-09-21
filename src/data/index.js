@@ -1,8 +1,8 @@
 import {map} from 'd3-collection';
 import {assign, isPromise, isArray} from 'd3-let';
-import {viewWarn} from 'd3-view';
+import {viewWarn as warn} from 'd3-view';
 
-import defaultProvider from './provider';
+import defaultSerie from './serie';
 
 
 function dataStore (vm) {
@@ -12,7 +12,7 @@ function dataStore (vm) {
 
 
 function DataStore (vm) {
-    this.$providers = map();
+    this.$series = map();
     this.$vm = vm;
 }
 
@@ -20,34 +20,41 @@ function DataStore (vm) {
 DataStore.prototype = dataStore.prototype = {
 
     size () {
-        return this.$providers.size();
+        return this.$series.size();
     },
 
     // set or get a new data provider
-    provider (name, provider) {
-        if (arguments.length === 1) return this.$providers.get(name);
-        if (provider === null) {
-            var p = this.$providers.get(name);
-            this.$providers.remove(name);
+    serie (name, newSerie) {
+        if (arguments.length === 1) return this.$series.get(name);
+        if (newSerie === null) {
+            var p = this.$series.get(name);
+            this.$series.remove(name);
             return p;
         }
-        provider = assign({}, defaultProvider, provider);
-        provider.init();
-        this.$providers.set(name, provider);
+        var serie = assign({}, defaultSerie, newSerie);
+        serie.init();
+        this.$series.set(name, serie);
         return this;
     },
 
     getList (name, params) {
-        var provider = this.$providers.get(name) || defaultProvider,
-            result = provider.getList(params);
+        var serie = this.$series.get(name),
+            result = serie ? serie.getList(params) : [];
 
-        if (!isPromise(result)) result = new Promise((resolve) => {resolve(result);});
+        if (!isPromise(result)) {
+            result = new Promise((resolve) => {resolve(result);});
+            if (!serie) {
+                warn(`Serie "${name} not available`);
+                return result;
+            }
+        }
+
         return result.then((data) => {
             if (!isArray(data)) {
-                viewWarn(`Excepted an array, got ${typeof data}`);
+                warn(`Excepted an array, got ${typeof data}`);
                 data = [];
             }
-            provider.add(data);
+            serie.add(data);
             return data;
         });
     }

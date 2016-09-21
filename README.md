@@ -15,9 +15,13 @@ reactive data visualization components.
 
 
 - [Installing](#installing)
+- [Graphics Grammar](#graphics-grammar)
+  - [Paper](#paper)
+  - [Layer](#layer)
 - [API Reference](#api-reference)
   - [Components](#components)
   - [dataStore](#datastore)
+- [References](#references)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -38,6 +42,24 @@ vm.mount('#target');
 
 </script>
 ```
+
+## Graphics Grammar
+
+### Paper
+
+The paper is another name for a plot container.
+The following components make up a paper:
+
+* A default data serie name from the [dataStore][] container
+* One background layer for plot annotation such as *background* and *grid*
+* One or more layers
+* One foreground layer for user interactions (canvas paper only)
+
+### Layer
+A layer is defined by:
+
+* Data, specifically the name of the serie in the [dataStore][] container
+* Marks (aestetics) - data mapping
 
 ## API Reference
 
@@ -67,5 +89,11 @@ If *provider* is not specified, returns the provider registered with *name* if a
 Fetch data from a registered data provider at *name* and return a [Promise][].
 If no data provider is registered for the given name, the promise resolve in an empty list.
 
+## References
+
+* [A Layered Grammar of Graphics](https://assets.fluidily.com/references/wickham-layered-grammar.pdf)
+
+
 [Coverage]: https://circleci.com/api/v1/project/quantmind/d3-fluid/latest/artifacts/0/$CIRCLE_ARTIFACTS/coverage/index.html?branch=master&filter=successful
 [Promise]: https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/Promise
+[dataStore]: #dataStore

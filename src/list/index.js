@@ -20,7 +20,14 @@ export default {
     render (data, attrs) {
         var tag = data.tag || 'ul',
             id = attrs.id || `list-${this.uid}`,
-            html = tags[tag];
+            html = tags[tag],
+            store;
+
+        if (attrs.source) {
+            store = this.model.$dataStore.source(attrs.source);
+            if (!store) warn(`source "${attrs.source}" not available, cannot retrieve data`);
+        } else
+            warn('source not specified, cannot retrieve data');
 
         var el = this.htmlElement(`<div id="${id}"></div>`);
 
