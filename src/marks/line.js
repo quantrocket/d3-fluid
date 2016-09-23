@@ -2,6 +2,7 @@ import {line} from 'd3-shape';
 import {viewWarn as warn} from 'd3-view';
 import * as d3_shape from 'd3-shape';
 
+
 export default {
 
     defaults ()  {

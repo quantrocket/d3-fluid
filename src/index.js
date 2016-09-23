@@ -9,16 +9,16 @@ export default {
         vm.addComponent('d3list', list);
         //
         // Add dataProvider method to the view model
-        vm.dataProvider = dataProvider;
+        vm.dataSerie = dataSerie;
     }
 };
 
 
 
-function dataProvider (name, provider) {
-    if (arguments.length === 1) return this.model.$dataStore.provider(name);
+function dataSerie (name, serie) {
+    if (arguments.length === 1) return this.model.$dataStore.serie(name);
     else {
-        this.model.$dataStore.provider(name, provider);
+        this.model.$dataStore.serie(name, serie);
         return this;
     }
 }

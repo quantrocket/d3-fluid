@@ -24,10 +24,10 @@ export default {
             store;
 
         if (attrs.source) {
-            store = this.model.$dataStore.source(attrs.source);
-            if (!store) warn(`source "${attrs.source}" not available, cannot retrieve data`);
+            store = this.model.$dataStore.serie(attrs.source);
+            if (!store) warn(`source "${attrs.source}" not available, cannot retrieve serie`);
         } else
-            warn('source not specified, cannot retrieve data');
+            warn('source not specified, cannot retrieve serie');
 
         var el = this.htmlElement(`<div id="${id}"></div>`);
 
