@@ -33,7 +33,9 @@
         "d3-shape": "1.0",
         "d3-time-format": "2.0",
         "d3-voronoi": "1.0",
-        "d3-zoom": "1.0"
+        "d3-zoom": "1.0",
+        "d3-canvas-transition": "../d3-canvas-transition",
+        "d3-view": "../d3-view"
     },
     "devDependencies": {
         "babel-eslint": "6.1",
