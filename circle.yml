@@ -9,6 +9,8 @@ dependencies:
     - cd .. && git clone git@github.com:quantmind/d3-view.git
     - cd .. && git clone git@github.com:quantmind/d3-canvas-transition.git
     - npm install
+    - npm install ../d3-view
+    - npm install ../d3-canvas-transition
 
 
 test:
