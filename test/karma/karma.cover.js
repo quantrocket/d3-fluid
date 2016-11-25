@@ -18,7 +18,7 @@ module.exports = function (config) {
 
     var options = assign(base, {
 
-        browsers: ['PhantomJS'],
+        browsers: ['Chrome'],
 
         reporters: ['progress', 'coverage'],
 
