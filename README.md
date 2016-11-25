@@ -2,6 +2,8 @@
 Reactive data visualization components
 
 [![CircleCI](https://circleci.com/gh/quantmind/d3-fluid.svg?style=svg&circle-token=a224bfec44b5c4ea2457d374283302b0902418f5)](https://circleci.com/gh/quantmind/d3-fluid)
+[![Dependency Status](https://david-dm.org/quantmind/d3-fluid.svg)](https://david-dm.org/quantmind/d3-fluid)
+[![devDependency Status](https://david-dm.org/quantmind/d3-fluid/dev-status.svg)](https://david-dm.org/quantmind/d3-fluid#info=devDependencies)
 
 [Coverage][]
 
@@ -33,14 +35,19 @@ Otherwise, download the latest release.
 AMD, CommonJS, and vanilla environments are supported. In vanilla, a d3 global is exported.
 Try [d3-fluid](https://runkit.com/npm/d3-fluid) in your browser.
 ```javascript
-<script src="https://assets.fluidily.com/libs/d3-view/latest/d3-view.min.js"></script>
-<script src="https://assets.fluidily.com/libs/d3-fluid/latest/d3-fluid.min.js"></script>
-<script>
-
-var vm = d3.view().use(d3.fluid);
-vm.mount('#target');
-
-</script>
+<script src="https://d3js.org/d3-array.v1.min.js"></script>
+<script src="https://d3js.org/d3-collection.v1.min.js"></script>
+<script src="https://d3js.org/d3-color.v1.min.js"></script>
+<script src="https://d3js.org/d3-dispatch.v1.min.js"></script>
+<script src="https://d3js.org/d3-ease.v1.min.js"></script>
+<script src="https://d3js.org/d3-selection.v1.min.js"></script>
+<script src="https://d3js.org/d3-timer.v1.min.js"></script>
+<script src="https://d3js.org/d3-array.v1.min.js"></script>
+<script src="https://d3js.org/d3-interpolate.v1.min.js"></script>
+<script src="https://d3js.org/d3-transition.v1.min.js"></script>
+<script src="https://giottojs.org/latest/d3-let.min.js"></script>
+<script src="https://giottojs.org/latest/d3-view.min.js"></script>
+<script src="https://giottojs.org/latest/d3-fluid.min.js"></script>
 ```
 
 ## Graphics Grammar
