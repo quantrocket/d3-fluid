@@ -33,7 +33,7 @@ export default {
             ]
         })
     ],
-    dest: 'dist/d3-fluid.js',
+    dest: 'build/d3-fluid.js',
     globals: {
         "d3-collection": "d3",
         "d3-dispatch": "d3",
