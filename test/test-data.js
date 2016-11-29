@@ -1,5 +1,5 @@
 import './utils';
-import {dataStore} from '../';
+import {dataStore} from '../index';
 
 
 describe('dataStore', () => {
