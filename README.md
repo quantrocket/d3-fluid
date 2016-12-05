@@ -50,11 +50,21 @@ Try [d3-fluid](https://runkit.com/npm/d3-fluid) in your browser.
 <script src="https://giottojs.org/latest/d3-fluid.min.js"></script>
 ```
 
-## Graphics Grammar
+## Layout
 
-### Paper
+### Rows
 
-The paper is another name for a plot container.
+A row is a layout component and it is only used to store information
+about the dashboard layout.
+
+### Columns
+
+A row is composed by one or more columns.
+
+
+## Paper
+
+The paper is another name for a container of data visualizations.
 The following components make up a paper:
 
 * A default data serie name from the [dataStore][] container

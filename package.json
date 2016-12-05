@@ -33,7 +33,6 @@
         "d3-scale": "1.0",
         "d3-shape": "1.0",
         "d3-time-format": "2.0",
-        "d3-voronoi": "1.1",
         "d3-zoom": "1.1",
         "d3-canvas-transition": "0.2",
         "d3-view": "0.1"
@@ -76,14 +75,14 @@
         "whatwg-fetch": "2.0"
     },
     "scripts": {
-        "test": "eslint index.js rollup.config.js test src examples && npm run-script unit",
+        "test": "eslint index.js rollup.config.js test src && npm run-script unit",
         "rollup": "rollup -c --banner \"$(preamble)\"",
         "cover": "karma start test/karma/karma.cover.js",
         "minify": "uglifyjs --preamble \"$(preamble)\" build/d3-fluid.js -c -m -o build/d3-fluid.min.js",
+        "build": "npm run-script rollup && npm run-script minify",
         "unit": "karma start test/karma/karma.unit.js",
         "debug": "karma start test/karma/karma.debug.js",
-        "asset": "cd build && POST https://<upload_url>/repos/quantmind/d3-fluid/releases/:id/assets?name=d3-fluid.zip",
-        "prepublish": "npm run-script rollup && npm run-script minify",
+        "prepublish": "npm run-script build",
         "postpublish": "VERSION=`node -e 'console.log(require(\"./package.json\").version)'`; git push && git tag -am \"Release $VERSION.\" v${VERSION} && git push --tags && mkdir -p ../giottojs.org/latest && mkdir -p ../giottojs.org/d3-fluid/${VERSION} && cp build/* ../giottojs.org/d3-fluid/${VERSION}/ && cp build/* ../giottojs.org/latest/ && cd ../giottojs.org && git add d3-fluid/${VERSION} latest && git commit -a -m \"d3-fluid ${VERSION}\" && git push",
         "release": "publish"
     }

@@ -1,7 +1,6 @@
 import json from 'rollup-plugin-json';
 import babel from 'rollup-plugin-babel';
 import commonjs from 'rollup-plugin-commonjs';
-import node from 'rollup-plugin-node-resolve';
 
 
 export default {
@@ -18,18 +17,6 @@ export default {
         commonjs({
             include: [
                 'node_modules/crossfilter/**'
-            ]
-        }),
-        node({
-            skip: [
-                'd3-collection',
-                'd3-dispatch',
-                'd3-let',
-                'd3-selection',
-                'd3-timer',
-                'd3-transition',
-                'd3-view',
-                'crossfilter'
             ]
         })
     ],

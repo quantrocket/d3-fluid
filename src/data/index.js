@@ -1,23 +1,34 @@
 import {map} from 'd3-collection';
 import {assign, isPromise, isArray} from 'd3-let';
-import {viewWarn as warn} from 'd3-view';
+import {viewRequire, viewWarn as warn} from 'd3-view';
 
 import defaultSerie from './serie';
 
 
-function dataStore (vm) {
-    var store = new DataStore(vm);
-    return store;
+function fluidStore (vm) {
+    if (vm) {
+        vm = vm.root;
+        var store = vm._fluidStore;
+        if (store) return store;
+    }
+    var promise = viewRequire(['crossfilter']).then(function (cf) {
+        var store = new DataStore(cf, vm);
+        return store;
+    });
+    if (vm) vm._fluidStore = promise;
+    return promise;
 }
 
 
-function DataStore (vm) {
+function DataStore (cf, vm) {
+    this.$cf = cf;
     this.$series = map();
     this.$vm = vm;
+    if (vm) vm._fluidStore = this;
 }
 
 
-DataStore.prototype = dataStore.prototype = {
+DataStore.prototype = fluidStore.prototype = {
 
     size () {
         return this.$series.size();
@@ -32,7 +43,7 @@ DataStore.prototype = dataStore.prototype = {
             return p;
         }
         var serie = assign({}, defaultSerie, newSerie);
-        serie.init();
+        serie.init(this);
         this.$series.set(name, serie);
         return this;
     },
@@ -61,4 +72,4 @@ DataStore.prototype = dataStore.prototype = {
 };
 
 
-export default dataStore;
+export default fluidStore;

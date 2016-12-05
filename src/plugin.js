@@ -1,18 +1,17 @@
-import dataStore from './data';
-import list from './list';
+import list from './components/list';
+import fluid from './components/fluid';
 
 
 export default {
 
     install (vm) {
-        vm.model.$dataStore = dataStore(vm);
         vm.addComponent('d3list', list);
+        vm.addComponent('d3fluid', fluid);
         //
         // Add dataProvider method to the view model
         vm.dataSerie = dataSerie;
     }
 };
-
 
 
 function dataSerie (name, serie) {

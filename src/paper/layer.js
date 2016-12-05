@@ -1,41 +1,43 @@
+import {map} from 'd3-collection';
 import {assign} from 'd3-let';
 
 
-export default function (paper) {
-    if (paper.type === 'svg') return new SvgLayer(paper);
-    else return new CanvasLayer(paper);
-}
+const layerProto = {
 
-function SvgLayer (paper) {
-    initLayer(this, paper);
-}
+    defaults () {
+        return {};
+    },
 
-function CanvasLayer (paper) {
-    initLayer(this, paper);
-}
+    canDraw (plot, sheet, series) {
+        if (!series || this.broadcast('draw', series).defaultPrevented) return;
+        this.logger.info(`Drawing ${this.name} from series ${series.toString()}`);
+        var current = this.$scope.$currentSeries;
+        this.$scope.$currentSeries = series;
+        return current || true;
+    },
 
-function initLayer (layer, paper) {
-
-    Object.defineProperties(layer, {
-        paper: {
-            get () {
-                return paper;
-            }
-        },
-        type: {
-            get () {
-                return paper.type;
-            }
-        }
-    });
-}
-
-
-SvgLayer.proptotype = {
-
+    draw () {}
 };
 
 
-CanvasLayer.prototype = assign({}, SvgLayer.proptotype, {
+export default assign(map(), {
 
+    add (name, layer) {
+
+        function Layer (options) {
+            this.name = name;
+            this.aesthetics = assign(this.defaults(), options);
+        }
+
+        Layer.prototype = assign({}, layerProto, layer);
+
+        this.set(name, Layer);
+        return this.get(name);
+    },
+
+    create (name, options) {
+        var Layer = this.get(name);
+        if (Layer)
+            return new Layer(options);
+    }
 });

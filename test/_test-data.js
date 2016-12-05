@@ -1,12 +1,12 @@
 import './utils';
-import {dataStore} from '../index';
+import {fluidStore} from '../index';
 
 
 describe('dataStore', () => {
 
 
     it('test registration', () => {
-        var store = dataStore();
+        var store = fluidStore();
         expect(store.size()).toBe(0);
         expect(store.serie('foo')).toBe(undefined);
         expect(store.serie('foo', {})).toBe(store);
@@ -20,7 +20,7 @@ describe('dataStore', () => {
 
 
     it('test simple serie', async (done) => {
-        var store = dataStore();
+        var store = fluidStore();
         expect(store.serie('foo', {
             getList () {
                 return [3, 4, 3, 6];

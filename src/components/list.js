@@ -7,7 +7,7 @@
 import {select} from 'd3-selection';
 import {viewWarn as warn} from 'd3-view';
 
-import ul from './list';
+import ul from '../utils/ul';
 
 
 const tags = {

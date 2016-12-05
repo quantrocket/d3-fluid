@@ -1,12 +1,10 @@
-import cf from 'crossfilter/crossfilter';
-
 
 // Provider interface
 export default {
 
-    init (data) {
-        this._cf = cf.crossfilter();
-        if (arguments.length) this.add(data);
+    init (store, data) {
+        this._cf = store.$cf.crossfilter();
+        if (arguments.length > 1) this.add(data);
         this.natural = this._cf.dimension((d) => {
             return d._id;
         });
