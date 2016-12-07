@@ -26,8 +26,10 @@ export default {
         "d3-dispatch": "d3",
         "d3-let": "d3",
         "d3-selection": "d3",
+        "d3-shape": "d3",
         "d3-timer": "d3",
         "d3-transition": "d3",
+        "d3-canvas-transition": "d3",
         "d3-view": "d3"
     }
 };

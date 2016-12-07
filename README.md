@@ -76,9 +76,26 @@ The following components make up a paper:
 A layer is defined by:
 
 * Data, specifically the name of the serie in the [dataStore][] container
-* Marks (aestetics) - data mapping
+* Marks (aesthetics) - data mapping
 
 ## API Reference
+
+### Paper and Layers
+
+#### fluidLayers.add(<i>name</i>, <i>prototype</i>)
+
+Add a new layer prototype to library, The new layer is accessed via
+```javascript
+fluidLayers.get(name)
+```
+
+### Layer
+
+A layer exposes the following API
+
+#### layer.draw(<i>plot</i>, <i>sheet</i>, <i>series</i>)
+
+Method called by the **plot** every time it needs to redraw the layer into a **sheet**.
 
 ### Components
 

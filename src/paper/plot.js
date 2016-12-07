@@ -28,6 +28,11 @@ export function Plot () {
 
 Plot.prototype = {
 
+    getSeries () {
+
+    },
+
+    // Draw a plot on a paper sheet
     draw (sheet) {
         var plot = this,
             series = this.getSeries();
