@@ -17,10 +17,19 @@ reactive data visualization components.
 
 
 - [Installing](#installing)
-- [Graphics Grammar](#graphics-grammar)
-  - [Paper](#paper)
+- [Paper](#paper)
+  - [Plot](#plot)
   - [Layer](#layer)
+    - [Geometric objects](#geometric-objects)
+    - [Statistical transformation](#statistical-transformation)
+- [Layout](#layout)
+  - [Rows](#rows)
+  - [Columns](#columns)
 - [API Reference](#api-reference)
+  - [Paper and Layers](#paper-and-layers)
+    - [fluidLayers.add(name, prototype)](#fluidlayersaddname-prototype)
+  - [Layer](#layer-1)
+    - [layer.draw(plot, paper, series)](#layerdrawplot-paper-series)
   - [Components](#components)
   - [dataStore](#datastore)
 - [References](#references)
@@ -50,6 +59,70 @@ Try [d3-fluid](https://runkit.com/npm/d3-fluid) in your browser.
 <script src="https://giottojs.org/latest/d3-fluid.min.js"></script>
 ```
 
+## Paper
+
+The paper is another name for a container of data visualizations.
+The following components make up a paper:
+
+* A default data serie name from the [dataStore][] container
+* One background layer for plot annotation such as *background* and *grid*
+* One or more layers
+* One foreground layer for user interactions (canvas paper only)
+
+### Plot
+
+* One or more layers
+* One scale for each aesthetic mapping used
+* A coordinate system
+
+### Layer
+
+A layer is defined by:
+
+* Data, specifically the name of the serie in the [dataStore][] container
+* Aesthetics and data mapping
+* A statistical transformation (**stat**)
+* A geometric object (**geom**)
+
+For example a scatterplot layer requires:
+
+* Data
+* Aesthetics and mapping: *x*, *y*, *size* (optional), *color* (optional)
+* **stat** (default *identity*)
+* **geom** (default *circle*)
+
+#### Geometric objects
+
+Controls the type of plot that you create.
+These objects are abstract components and can be rendered in different
+ways. They are general purpose, but they do require certain output from
+a **stat**. They can be divided into groups according to their dimensionality:
+
+* 0d: point, text
+* 1d: path, line (ordered path)
+* 2d: polygon, interval
+
+Each **geom** has an associated default **stat** and each stat as an
+associated default geom.
+
+#### Statistical transformation
+
+| Stat | default geom | description |
+|---|---|---|
+| bin | bar | Divide a range into bins and and perform a weighted count of points in each |
+| identity | point | Identity transformation f(x) = x |
+| smooth | line | Smoothed conditional mean of y (r) given x (theta) |
+| summary | bar | Aggregate values of y for given x |
+
+A stat must be location-scale invariant:
+```
+f(x+a) = f(x)+a and f(bx) = b f(x)
+```
+A stat takes a dataset as input and returns a dataset as output, and so a stat can add new
+variables to the original dataset.
+
+A source of many statistics is the [d3-array][] library.
+
 ## Layout
 
 ### Rows
@@ -62,29 +135,13 @@ about the dashboard layout.
 A row is composed by one or more columns.
 
 
-## Paper
-
-The paper is another name for a container of data visualizations.
-The following components make up a paper:
-
-* A default data serie name from the [dataStore][] container
-* One background layer for plot annotation such as *background* and *grid*
-* One or more layers
-* One foreground layer for user interactions (canvas paper only)
-
-### Layer
-A layer is defined by:
-
-* Data, specifically the name of the serie in the [dataStore][] container
-* Marks (aesthetics) - data mapping
-
 ## API Reference
 
 ### Paper and Layers
 
-#### fluidLayers.add(<i>name</i>, <i>prototype</i>)
+#### fluidLayers.add(name, prototype)
 
-Add a new layer prototype to library, The new layer is accessed via
+Add a new layer to library, The new layer is accessed via
 ```javascript
 fluidLayers.get(name)
 ```
@@ -93,9 +150,9 @@ fluidLayers.get(name)
 
 A layer exposes the following API
 
-#### layer.draw(<i>plot</i>, <i>sheet</i>, <i>series</i>)
+#### layer.draw(plot, paper, series)
 
-Method called by the **plot** every time it needs to redraw the layer into a **sheet**.
+Method called by the **plot** every time it needs to redraw the layer into a **paper**.
 
 ### Components
 
@@ -131,3 +188,4 @@ If no data provider is registered for the given name, the promise resolve in an 
 [Coverage]: https://circleci.com/api/v1/project/quantmind/d3-fluid/latest/artifacts/0/$CIRCLE_ARTIFACTS/coverage/index.html?branch=master&filter=successful
 [Promise]: https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/Promise
 [dataStore]: #dataStore
+[d3-array]: https://github.com/d3/d3-array

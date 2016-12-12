@@ -2,7 +2,7 @@ import {inBrowser} from 'd3-let';
 import {viewDebounce} from 'd3-view';
 import {select} from 'd3-canvas-transition';
 
-import paper from '../paper/index';
+import paper from '../core/paper';
 
 
 if (inBrowser) {

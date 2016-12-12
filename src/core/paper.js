@@ -1,26 +1,11 @@
 import {select} from 'd3-canvas-transition';
 import {viewUid} from 'd3-view';
-import {isFunction, isBrowser, assign} from 'd3-let';
+import {isFunction, inBrowser, assign} from 'd3-let';
 import {dispatch} from 'd3-dispatch';
 
 import {getSize, boundingBox} from '../utils/size';
-import newSheet from './sheet';
-import layers from './layer';
 import plots from './plot';
-import points from '../layers/points';
-import line from '../layers/line';
-import area from '../layers/area';
-
-// Built-in layers
-layers.add('points', points);
-layers.add('line', line);
-layers.add('area', area);
-
-// Built-in plots
-plots.add('scatter', ['points']);
-plots.add('line', ['line']);
-plots.add('linepoints', ['line', 'points']);
-plots.add('area', ['area', 'line']);
+import newSheet from './sheet';
 
 
 export default function paper (options) {
@@ -41,6 +26,7 @@ function Paper (element, options) {
             .classed('d3-paper', true)
             .classed('d3-paper-' + type, true);
 
+    this.name = options.name || '<noname>';
     assign(this, getSize(element, options));
 
     Object.defineProperties(this, {
@@ -72,10 +58,30 @@ function Paper (element, options) {
     });
     paper.live.push(this);
     paper.events.call('init', this, options);
+    plots.init(this, options.plots);
+    this.draw();
 }
 
 
 Paper.prototype = paper.prototype = {
+
+    draw () {
+        this.sheets.forEach(function () {
+            this.draw();
+        });
+    },
+
+    toJson () {
+        var json = {
+            name: this.name,
+            sheets: []
+        };
+        this.sheets.forEach(function () {
+            json.sheets.push(this.toJson());
+        });
+        paper.events.call('json', this, json);
+        return json;
+    },
 
     addSheet () {
         var sheet = newSheet(this);
@@ -115,7 +121,7 @@ Paper.prototype = paper.prototype = {
 // Paper globals
 paper.events = dispatch('init', 'before-draw', 'after-draw');
 paper.live = [];
-paper.constants = (isBrowser ? window.fluidPaper : null) || {};
+paper.constants = (inBrowser ? window.fluidPaper : null) || {};
 
 
 function getElement (element) {

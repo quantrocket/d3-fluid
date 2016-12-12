@@ -1,5 +1,5 @@
 
-// Provider interface
+// Prototype for a datastore object
 export default {
 
     init (store, data) {

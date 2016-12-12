@@ -43,9 +43,19 @@ function initSheet (sheet, paper) {
 
 Svg.proptotype = {
 
+    toJson () {
+
+    },
+
+    gradient () {
+
+    }
 };
 
 
 Canvas.prototype = assign({}, Svg.proptotype, {
 
+    gradient () {
+
+    }
 });

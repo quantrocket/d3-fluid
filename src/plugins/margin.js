@@ -1,8 +1,10 @@
 import {assign, isObject} from 'd3-let';
-import paper from '../paper/index';
+import paper from '../core/paper';
+import plots from '../core/plot';
 
 
-paper.events.on('init.margin', paperMargin);
+paper.events.on('init.margin', setMargin);
+plots.events.on('init.margin', plotMargin);
 
 
 const defaultMargin = {
@@ -13,7 +15,7 @@ const defaultMargin = {
 };
 
 
-function paperMargin (options) {
+function setMargin (options) {
     var margin = options.margin;
 
     if (!isObject(margin)) {
@@ -27,6 +29,22 @@ function paperMargin (options) {
     } else {
         margin = assign({}, margin, defaultMargin);
     }
+
+    Object.defineProperty(this, 'margin', {
+        get () {
+            return margin;
+        }
+    });
+}
+
+
+function plotMargin (options) {
+    function Margin (initials) {
+        assign(this, initials);
+    }
+    Margin.prototype = this.paper.margin;
+
+    var margin = new Margin(options.margin);
 
     Object.defineProperty(this, 'margin', {
         get () {

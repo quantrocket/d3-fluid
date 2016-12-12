@@ -14,6 +14,8 @@ export default {
         };
     },
 
+    aesthetics: ['x', 'y', 'symbol', 'size', 'fill', 'color'],
+
     draw (plot, sheet, series) {
         var data = series[0].data(),
             aesthetics = this.aesthetics,
