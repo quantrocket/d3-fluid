@@ -8,8 +8,8 @@ import plots from './plot';
 import newSheet from './sheet';
 
 
-export default function paper (options) {
-    return new Paper(options);
+export default function paper (element, options) {
+    return new Paper(element, options);
 }
 
 
@@ -58,8 +58,8 @@ function Paper (element, options) {
     });
     paper.live.push(this);
     paper.events.call('init', this, options);
+    // Initialise paper plots
     plots.init(this, options.plots);
-    this.draw();
 }
 
 

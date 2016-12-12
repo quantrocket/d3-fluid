@@ -12,14 +12,13 @@ export default {
         };
     },
 
-    draw (plot, sheet, series) {
-        var data = series[0].data(),
-            aesthetics = this.aesthetics,
+    draw (plot, series) {
+        var aesthetics = this.aesthetics,
             path = plot.path(this, sheet).data([data]),
-            x = this.scaled(this.accessor(plot.x || 'x'), plot.scalex || 'x'),
-            y = this.scaled(this.accessor(plot.y || 'y'), 'y'),
+            x = this.scaled(this.mapping('x', plot, series)),
+            y = this.scaled(this.mapping('y', plot, series)),
             line = d3_shape.line().x(x).y(y).curve(curve(this, aesthetics.curve)),
-            width = sheet.dim(aesthetics.lineWidth),
+            width = plot.dim(aesthetics.lineWidth),
             merge = plot.transition('update');
 
         path

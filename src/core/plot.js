@@ -8,6 +8,32 @@ var plotCount = 0;
 var plotEvents = dispatch('init', 'before-draw', 'after-draw');
 
 
+const plotProto = {
+
+    // get the data serie associated with this plot
+    getSeries () {
+    },
+
+    // Return a group element for a plot layer
+    group (paper, layer) {
+        var sheet = paper.plotSheet;
+        var group = sheet.selection().selectAll('.' + layer.uid).data([layer]);
+        return group;
+    },
+
+    // Draw a plot on a paper
+    draw (paper) {
+        var plot = this,
+            series = this.getSeries();
+
+        this.layers.forEach(() => {
+            if (this.canDraw(plot, paper, series))
+                this.draw(plot, paper, series);
+        });
+    }
+};
+
+
 export default assign(map(), {
     events: plotEvents,
 
@@ -24,12 +50,12 @@ export default assign(map(), {
 
     init (paper, plots) {
         if (!plots) return;
+        if (isString(plots)) plots = [plots];
         var factory = this;
-        plots.forEach(function () {
-            var options = this;
+        plots.forEach(function (options) {
             if (isString(options)) options = {type: options};
             var Plot = factory.get(options.type);
-            if (!plot) warn(`Plot type ${options.type} not available`);
+            if (!Plot) warn(`Plot type "${options.type}" not available`);
             else {
                 var plot = new Plot(options);
                 ++plotCount;
@@ -66,31 +92,3 @@ export function initPlot (plot, type, options) {
 
     plotEvents.call('init', plot, options);
 }
-
-
-const plotProto = {
-
-    // get the data serie associated with this plot
-    getSeries () {
-    },
-
-    // Return a group element for a plot layer
-    group (paper, layer) {
-        var sheet = paper.plotSheet;
-        var group = sheet.selection().selectAll('.' + layer.uid).data([layer]);
-        return group;
-    },
-
-    // Draw a plot on a paper
-    draw (paper) {
-        var plot = this,
-            series = this.getSeries();
-
-        this.layers.forEach(() => {
-            if (this.canDraw(plot, paper, series))
-                this.draw(plot, paper, series);
-        });
-    }
-};
-
-

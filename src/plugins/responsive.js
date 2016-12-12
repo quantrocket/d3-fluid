@@ -15,7 +15,7 @@ if (inBrowser) {
 
 
 function resizePaper () {
-    paper.live.forEach(function () {
-        this.resize();
+    paper.live.forEach(function (p) {
+        p.resize();
     });
 }

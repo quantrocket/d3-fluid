@@ -1,0 +1,151 @@
+{
+    "id": "https://giottojs.org/d3-fluid/schema.json#",
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "description": "schema for a d3-fluid dashboard",
+    "type": "object",
+    "properties": {
+        "title": {
+            "description": "Arbitrary text containing dashboard title",
+            "type": "string"
+        },
+        "description": {
+            "description": "Arbitrary text containing description",
+            "type": "string"
+        },
+        "data": {
+
+        },
+        "layers": {
+            "description": "Override defaults for layers",
+            "type": "object"
+        },
+        "plots": {
+            "description": "Plots configuration",
+            "type": "object",
+            "additionalProperties": {
+                "$ref": "#/definitions/plot"
+            }
+        },
+        "papers": {
+            "description": "Paper configurations",
+            "type": "object",
+            "additionalProperties": {
+                "$ref": "#/definitions/paper"
+            }
+        }
+    },
+    "definitions": {
+        "plot": {
+            "description": "Specify data, aesthetic mapping, scales and coordinates for a plot",
+            "type": "object",
+            "properties": {
+                "scales": {
+                },
+                "mapping": {
+                    "description": "Override default aesthetic data-mapping for the plot",
+                    "type": "object",
+                    "additionalProperties": {
+                        "$ref": "#/definitions/mapping"
+                    }
+                }
+            }
+        },
+        "paper": {
+            "type": "object",
+            "properties": {
+                "plots": {
+                    "description": "Plots to include in the paper",
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "uniqueItems": true
+                },
+                "type": {
+                    "description": "Paper type",
+                    "type": "string",
+                    "enum": [
+                        "svg",
+                        "canvas"
+                    ]
+                },
+                "margin": {
+                    "description": "Default margin of paper",
+                    "anyOf": [
+                        {
+                            "$ref": "#/definitions/percentageNumber"
+                        },
+                        {
+                            "$ref": "#/definitions/margin"
+                        }
+                    ]
+                },
+                "mapping": {
+                    "description": "Override default aesthetic data-mapping",
+                    "type": "object",
+                    "additionalProperties": {
+                        "$ref": "#/definitions/mapping"
+                    }
+                }
+            }
+        },
+        "margin": {
+            "type": "object",
+            "properties": {
+                "right": {
+                    "description": "Right margin of paper",
+                    "$ref": "#/definitions/percentageNumber"
+                },
+                "left": {
+                    "description": "Left margin of paper",
+                    "$ref": "#/definitions/percentageNumber"
+                },
+                "top": {
+                    "description": "Top margin of paper",
+                    "$ref": "#/definitions/percentageNumber"
+                },
+                "bottom": {
+                    "description": "Bottom margin of paper",
+                    "$ref": "#/definitions/percentageNumber"
+                }
+
+            }
+        },
+        "mapping": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string",
+                    "enum": [
+                        "color",
+                        "colorOpacity",
+                        "fill",
+                        "fillOpacity",
+                        "height",
+                        "radius",
+                        "shape",
+                        "size",
+                        "theta",
+                        "x",
+                        "y"
+                    ]
+                },
+                "from": {
+                    "description": "expression for aesthetic evaluation from data"
+                    "type": "string"
+                }
+            }
+        },
+        "percentageNumber": {
+            "description": "A number or a percentage such as 10%",
+            "anyOf": [
+                {
+                    "type": "number"
+                },
+                {
+                    "type": "string"
+                }
+            ]
+        }
+    }
+}
