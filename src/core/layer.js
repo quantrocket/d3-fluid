@@ -1,5 +1,9 @@
 import {map} from 'd3-collection';
+import {dispatch} from 'd3-dispatch';
 import {assign} from 'd3-let';
+
+
+var layerEvents = dispatch('init', 'before-draw', 'after-draw');
 
 
 const layerProto = {
@@ -21,6 +25,7 @@ const layerProto = {
 
 
 export default assign(map(), {
+    events: layerEvents,
 
     add (name, layer) {
 

@@ -6,7 +6,10 @@
         "name": "quantmind.com",
         "email": "message@quantmind.com"
     },
-    "keywords": [],
+    "keywords": [
+        "d3",
+        "d3-module"
+    ],
     "license": "BSD-3-Clause",
     "repository": {
         "type": "git",
@@ -15,7 +18,7 @@
     "engines": {
         "node": ">= 6.0"
     },
-    "main": "build/d3-fluid.min.js",
+    "main": "build/d3-fluid.js",
     "module": "index",
     "jsnext:main": "index",
     "dependencies": {
@@ -71,7 +74,6 @@
         "rollup-plugin-babel": "2.6",
         "rollup-plugin-commonjs": "5.0",
         "rollup-plugin-json": "2.0",
-        "rollup-plugin-node-resolve": "2.0",
         "uglify-js": "2.7",
         "watchify": "3.7",
         "whatwg-fetch": "2.0"

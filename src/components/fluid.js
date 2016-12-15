@@ -44,6 +44,7 @@ function fetchBuild (vm, src, attr) {
 
 
 export default {
+
     model: {
 
     },

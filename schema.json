@@ -1,7 +1,7 @@
 {
     "id": "https://giottojs.org/d3-fluid/schema.json#",
     "$schema": "http://json-schema.org/draft-04/schema#",
-    "description": "schema for a d3-fluid dashboard",
+    "description": "schema for a d3-fluid dashboards",
     "type": "object",
     "properties": {
         "title": {
@@ -11,6 +11,15 @@
         "description": {
             "description": "Arbitrary text containing description",
             "type": "string"
+        },
+        "dashboard": {
+            "description": "Dashboard layout",
+            "rows": {
+                "type": "array",
+                "items": {
+
+                }
+            }
         },
         "data": {
 
@@ -40,6 +49,8 @@
             "type": "object",
             "properties": {
                 "scales": {
+                    "description": "Override default scales for a plot",
+                    "type": "object"
                 },
                 "mapping": {
                     "description": "Override default aesthetic data-mapping for the plot",
@@ -131,7 +142,7 @@
                     ]
                 },
                 "from": {
-                    "description": "expression for aesthetic evaluation from data"
+                    "description": "expression for aesthetic evaluation from data",
                     "type": "string"
                 }
             }

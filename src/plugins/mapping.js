@@ -1,31 +1,39 @@
 import {assign} from 'd3-let';
+import protoChild from '../utils/child';
 import paper from '../core/paper';
-
+import plots from '../core/plot';
+import layers from '../core/layer';
 
 paper.events.on('init.mapping', setMapping);
+plots.events.on('init.mapping', plotMapping);
+layers.events.on('init.mapping', layerMapping);
+
 
 const defaultMapping = {
-    x: mapping('x'),
-    y: mapping('y'),
-    theta: mapping('theta'),
-    radius: mapping('radius')
+    x: {
+        from: 'default.x'
+    },
+    y: {
+        from: 'default.y'
+    },
+    theta: {
+        from: 'default.theta'
+    },
+    radius: {
+        from: 'default.theta'
+    },
 };
 
 
 function setMapping (options) {
-    var mapping = assign({}, defaultMapping, options.mapping);
-
-    Object.defineProperty(this, 'mapping', {
-        get () {
-            return mapping;
-        }
-    });
+    this.mapping = assign({}, defaultMapping, options.mapping);
 }
 
-
-function mapping(aesthetic) {
-
-    return function (data) {
-        
-    }
+function plotMapping (options) {
+    this.mapping = protoChild(this.paper.mapping, options.mapping);
 }
+
+function layerMapping (options) {
+    this.mapping = protoChild(this.plot.mapping, options.mapping);
+}
+

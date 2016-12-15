@@ -15,8 +15,8 @@ export default {
     draw (plot, series) {
         var aesthetics = this.aesthetics,
             path = plot.path(this, sheet).data([data]),
-            x = this.scaled(this.mapping('x', plot, series)),
-            y = this.scaled(this.mapping('y', plot, series)),
+            x = this.scaled(this.mapping.x, plot, series),
+            y = this.scaled(this.mapping.y, plot, series),
             line = d3_shape.line().x(x).y(y).curve(curve(this, aesthetics.curve)),
             width = plot.dim(aesthetics.lineWidth),
             merge = plot.transition('update');
