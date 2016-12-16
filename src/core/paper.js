@@ -1,5 +1,5 @@
 import {select} from 'd3-canvas-transition';
-import {viewUid} from 'd3-view';
+import {viewUid, viewModel} from 'd3-view';
 import {isFunction, inBrowser, assign} from 'd3-let';
 import {dispatch} from 'd3-dispatch';
 
@@ -18,6 +18,7 @@ function Paper (element, options) {
     element = getElement(element);
 
     var type = options.type || 'canvas',
+        config = viewModel(),
         sheets = [];
 
     select(element)
@@ -53,6 +54,11 @@ function Paper (element, options) {
         size: {
             get () {
                 return [this.width, this.height];
+            }
+        },
+        config: {
+            get () {
+                return config;
             }
         }
     });
@@ -114,7 +120,10 @@ Paper.prototype = paper.prototype = {
 
     destroy () {
         var idx = paper.live.indexOf(this);
-        if (idx > -1) paper.live.splice(idx, 1);
+        if (idx > -1) {
+            paper.live.splice(idx, 1);
+            this.config.$off();
+        }
     }
 };
 

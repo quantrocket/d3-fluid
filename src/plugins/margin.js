@@ -1,3 +1,6 @@
+//
+//  Add margin models to Paper and Plot objects
+//
 import {assign, isObject} from 'd3-let';
 import paper from '../core/paper';
 import plots from '../core/plot';
@@ -18,7 +21,7 @@ const defaultMargin = {
 function setMargin (options) {
     var margin = options.margin;
 
-    if (!isObject(margin)) {
+    if (margin !== undefined && !isObject(margin)) {
         var value = margin || 0;
         margin = {
             left: value,
@@ -27,28 +30,12 @@ function setMargin (options) {
             bottom: value
         };
     } else {
-        margin = assign({}, margin, defaultMargin);
+        margin = assign({}, defaultMargin, margin);
     }
-
-    Object.defineProperty(this, 'margin', {
-        get () {
-            return margin;
-        }
-    });
+    this.margin = this.config.$new(margin);
 }
 
 
 function plotMargin (options) {
-    function Margin (initials) {
-        assign(this, initials);
-    }
-    Margin.prototype = this.paper.margin;
-
-    var margin = new Margin(options.margin);
-
-    Object.defineProperty(this, 'margin', {
-        get () {
-            return margin;
-        }
-    });
+    this.margin = this.paper.margin.$child(options.margin);
 }

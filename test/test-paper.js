@@ -10,7 +10,21 @@ describe('fluidPaper', () => {
         expect(isObject(fluidPaper.constants)).toBe(true);
     });
 
-    it('test fluidPaper responsive', () => {
+    it('test fluidPaper responsive defaults', () => {
         expect(fluidPaper.constants.resizeDelay).toBe(200);
+    });
+
+    it('test paper constructor', () => {
+        var paper = fluidPaper();
+        expect(paper.element).toBeTruthy();
+        expect(paper.container).toBeTruthy();
+        expect(paper.type).toBe('canvas');
+        expect(paper.config).toBeTruthy();
+        expect(paper.margin).toBeTruthy();
+        expect(paper.margin.right).toBe(20);
+        expect(paper.margin.left).toBe(20);
+        expect(paper.margin.top).toBe(20);
+        expect(paper.margin.bottom).toBe(20);
+        expect(fluidPaper.live.indexOf(paper)).toBeGreaterThan(-1);
     });
 });

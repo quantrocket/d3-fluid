@@ -1,5 +1,5 @@
 import {assign} from 'd3-let';
-import protoChild from '../utils/child';
+
 import paper from '../core/paper';
 import plots from '../core/plot';
 import layers from '../core/layer';
@@ -26,14 +26,14 @@ const defaultMapping = {
 
 
 function setMapping (options) {
-    this.mapping = assign({}, defaultMapping, options.mapping);
+    this.mapping = this.config.$new(assign({}, defaultMapping, options.mapping));
 }
 
 function plotMapping (options) {
-    this.mapping = protoChild(this.paper.mapping, options.mapping);
+    this.mapping = this.paper.mapping.$child(options.mapping);
 }
 
 function layerMapping (options) {
-    this.mapping = protoChild(this.plot.mapping, options.mapping);
+    this.mapping = this.plot.mapping.$child(options.mapping);
 }
 
