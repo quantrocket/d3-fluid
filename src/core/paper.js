@@ -1,6 +1,6 @@
 import {select} from 'd3-canvas-transition';
-import {viewUid, viewModel} from 'd3-view';
-import {isFunction, inBrowser, assign} from 'd3-let';
+import {viewUid, viewModel, viewWarn as warn} from 'd3-view';
+import {isFunction, inBrowser, isString, isArray, isObject, assign} from 'd3-let';
 import {dispatch} from 'd3-dispatch';
 
 import {getSize, boundingBox} from '../utils/size';
@@ -9,15 +9,22 @@ import newSheet from './sheet';
 
 
 export default function paper (element, options) {
+    if (arguments.length === 1 && isObject(element)) {
+        options = element;
+        element = null;
+    }
     return new Paper(element, options);
 }
 
-
+//
+// Paper object is a container of plot objects
 function Paper (element, options) {
     if (!options) options = {};
     element = getElement(element);
 
-    var type = options.type || 'canvas',
+    var self = this,
+        type = options.type || 'canvas',
+        plots = [],
         config = viewModel(),
         sheets = [];
 
@@ -31,6 +38,11 @@ function Paper (element, options) {
     assign(this, getSize(element, options));
 
     Object.defineProperties(this, {
+        plots: {
+            get () {
+                return plots;
+            }
+        },
         sheets: {
             get () {
                 return sheets;
@@ -65,11 +77,28 @@ function Paper (element, options) {
     paper.live.push(this);
     paper.events.call('init', this, options);
     // Initialise paper plots
-    plots.init(this, options.plots);
+    if (options.plots) {
+        var plots = options.plots;
+        if (!isArray(plots)) plots = [plots];
+        plots.forEach(function (opts) {
+            self.addPlot(opts);
+        });
+    }
 }
 
 
 Paper.prototype = paper.prototype = {
+
+    addPlot (options) {
+        if (isString(options)) options = {type: options};
+        var Plot = plots.get(options.type);
+        if (!Plot) warn(`Plot type "${options.type}" not available`);
+        else {
+            var plot = new Plot(this, options);
+            this.plots.push(plot);
+            return plot;
+        }
+    },
 
     draw () {
         this.sheets.forEach(function () {

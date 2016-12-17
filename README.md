@@ -33,6 +33,15 @@ reactive data visualization components.
   - [Components](#components)
   - [dataStore](#datastore)
 - [References](#references)
+- [Javascript API](#javascript-api)
+  - [Paper](#paper-1)
+    - [paper.addPlot(options)](#paperaddplotoptions)
+    - [paper.draw()](#paperdraw)
+    - [paper.resize([size])](#paperresizesize)
+  - [Plot](#plot-1)
+    - [plot.name](#plotname)
+    - [plot.paper](#plotpaper)
+    - [plot.type](#plottype)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -184,6 +193,34 @@ If no data provider is registered for the given name, the promise resolve in an 
 
 * [A Layered Grammar of Graphics](https://assets.fluidily.com/references/wickham-layered-grammar.pdf)
 
+## Javascript API
+
+### Paper
+
+#### paper.addPlot(options)
+
+#### paper.draw()
+
+Draw or re-draw the paper
+
+#### paper.resize([size])
+
+Resize the paper if it needs resizing
+
+
+### Plot
+
+#### plot.name
+
+Name of the plot
+
+#### plot.paper
+
+The paper the plot belongs to
+
+#### plot.type
+
+Type of plot: `scatter`, `line`, `linesp`, `bar`, `pie`, `area`
 
 [Coverage]: https://circleci.com/api/v1/project/quantmind/d3-fluid/latest/artifacts/0/$CIRCLE_ARTIFACTS/coverage/index.html?branch=master&filter=successful
 [Promise]: https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/Promise

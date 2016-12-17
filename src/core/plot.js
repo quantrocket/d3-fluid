@@ -1,7 +1,6 @@
 import {map} from 'd3-collection';
 import {dispatch} from 'd3-dispatch';
 import {assign, isString} from 'd3-let';
-import {viewWarn as warn} from 'd3-view';
 
 
 var plotCount = 0;
@@ -34,48 +33,50 @@ const plotProto = {
 };
 
 
+//
+// Plot factory object
 export default assign(map(), {
     events: plotEvents,
 
-    add (name, plot) {
+    //
+    // add a new plot class to the factory
+    add (type, plot) {
 
-        function Plot (options) {
-            initPlot(this, name, options);
+        function Plot (paper, options) {
+            initPlot(this, type, paper, options);
         }
 
         Plot.prototype = assign({}, plotProto, plot);
 
-        this.set(name, Plot);
-    },
-
-    init (paper, plots) {
-        if (!plots) return;
-        if (isString(plots)) plots = [plots];
-        var factory = this;
-        plots.forEach(function (options) {
-            if (isString(options)) options = {type: options};
-            var Plot = factory.get(options.type);
-            if (!Plot) warn(`Plot type "${options.type}" not available`);
-            else {
-                var plot = new Plot(options);
-                ++plotCount;
-                if (!plot.name) plot.name = 'plot' + plotCount;
-                paper.plots.push(plot);
-            }
-        });
+        this.set(type, Plot);
     }
 });
 
 
 // A Plot is the combination is a visualisation on a paper
-export function initPlot (plot, type, options) {
+export function initPlot (plot, type, paper, options) {
     var layers = [],
-        scales = map();
+        scales = map(),
+        name = options.name;
+
+    ++plotCount;
+
+    if (!name) name = 'plot' + plotCount;
 
     Object.defineProperties(plot, {
         type: {
             get () {
                 return type;
+            }
+        },
+        name: {
+            get () {
+                return name;
+            }
+        },
+        paper: {
+            get () {
+                return paper;
             }
         },
         layers: {

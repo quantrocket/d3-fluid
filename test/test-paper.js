@@ -1,4 +1,4 @@
-import './utils';
+import {removePaper} from './utils';
 import {isArray, isObject} from 'd3-let';
 import {fluidPaper} from '../index';
 
@@ -25,6 +25,6 @@ describe('fluidPaper', () => {
         expect(paper.margin.left).toBe(20);
         expect(paper.margin.top).toBe(20);
         expect(paper.margin.bottom).toBe(20);
-        expect(fluidPaper.live.indexOf(paper)).toBeGreaterThan(-1);
+        removePaper(paper);
     });
 });
