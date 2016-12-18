@@ -17,24 +17,32 @@ reactive data visualization components.
 
 
 - [Installing](#installing)
-- [Paper & Plots](#paper-&-plots)
-  - [Plot](#plot)
-- [Layer](#layer)
+- [Design](#design)
+  - [Plot design](#plot-design)
+  - [Layer design](#layer-design)
   - [Geometric objects](#geometric-objects)
   - [Statistical transformation](#statistical-transformation)
 - [dataStore](#datastore)
 - [Javascript API](#javascript-api)
   - [Paper](#paper)
     - [paper.addPlot(options)](#paperaddplotoptions)
+    - [paper.clear()](#paperclear)
     - [paper.draw()](#paperdraw)
     - [paper.resize([size])](#paperresizesize)
-  - [Plot](#plot-1)
+  - [Plot](#plot)
+    - [plot.layers](#plotlayers)
     - [plot.name](#plotname)
     - [plot.paper](#plotpaper)
+    - [plot.scales](#plotscales)
     - [plot.type](#plottype)
-  - [Layer](#layer-1)
+    - [plot.addLayer(options)](#plotaddlayeroptions)
+    - [plot.addScale(options)](#plotaddscaleoptions)
+    - [plot.scaled(mapping, data, scale)](#plotscaledmapping-data-scale)
+    - [fluidPlots.add(type, options)](#fluidplotsaddtype-options)
+  - [Layer](#layer)
     - [layer.draw(plot, series)](#layerdrawplot-series)
     - [fluidLayers.add(name, prototype)](#fluidlayersaddname-prototype)
+  - [dataStore](#datastore-1)
 - [References](#references)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -168,16 +176,16 @@ Clear the paper, always called when re-drawing the paper
 
 Draw or re-draw the paper
 
-#### paper.layers
-
-Array of [layers](#layer) which define the plot.
-
 #### paper.resize([size])
 
 Resize the paper if it needs resizing
 
 
 ### Plot
+
+#### plot.layers
+
+Array of [layers](#layer) which define the plot.
 
 #### plot.name
 
