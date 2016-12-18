@@ -3,13 +3,10 @@ import * as d3_shape from 'd3-shape';
 
 export default {
 
-    defaults (plot) {
-        return {
-            lineWidth: 1,
-            colorOpacity: 1,
-            curve: 'cardinalOpen',
-            color: plot.color(this)
-        };
+    defaults: {
+        lineWidth: 1,
+        colorOpacity: 1,
+        curve: 'cardinalOpen'
     },
 
     draw (plot, series) {

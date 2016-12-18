@@ -14,7 +14,7 @@ export default function (size, options) {
     var t = range(0, +size, 1),
         S = options.sigma,
         drift = options.drift,
-        data = [[0, 0]],
+        data = [{x: 0, y: 0}],
         norm = randomNormal(0, 1),
         dx;
 
@@ -22,7 +22,7 @@ export default function (size, options) {
         dx = drift + S * norm();
         data[i] = {
             x: i,
-            y: data[i - 1][1] + dx
+            y: data[i - 1].y + dx
         };
     }
 

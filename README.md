@@ -17,24 +17,14 @@ reactive data visualization components.
 
 
 - [Installing](#installing)
-- [Paper](#paper)
+- [Paper & Plots](#paper-&-plots)
   - [Plot](#plot)
-  - [Layer](#layer)
-    - [Geometric objects](#geometric-objects)
-    - [Statistical transformation](#statistical-transformation)
-- [Layout](#layout)
-  - [Rows](#rows)
-  - [Columns](#columns)
-- [API Reference](#api-reference)
-  - [Paper and Layers](#paper-and-layers)
-    - [fluidLayers.add(name, prototype)](#fluidlayersaddname-prototype)
-  - [Layer](#layer-1)
-    - [layer.draw(plot, paper, series)](#layerdrawplot-paper-series)
-  - [Components](#components)
-  - [dataStore](#datastore)
-- [References](#references)
+- [Layer](#layer)
+  - [Geometric objects](#geometric-objects)
+  - [Statistical transformation](#statistical-transformation)
+- [dataStore](#datastore)
 - [Javascript API](#javascript-api)
-  - [Paper](#paper-1)
+  - [Paper](#paper)
     - [paper.addPlot(options)](#paperaddplotoptions)
     - [paper.draw()](#paperdraw)
     - [paper.resize([size])](#paperresizesize)
@@ -42,6 +32,10 @@ reactive data visualization components.
     - [plot.name](#plotname)
     - [plot.paper](#plotpaper)
     - [plot.type](#plottype)
+  - [Layer](#layer-1)
+    - [layer.draw(plot, series)](#layerdrawplot-series)
+    - [fluidLayers.add(name, prototype)](#fluidlayersaddname-prototype)
+- [References](#references)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
@@ -68,9 +62,9 @@ Try [d3-fluid](https://runkit.com/npm/d3-fluid) in your browser.
 <script src="https://giottojs.org/latest/d3-fluid.min.js"></script>
 ```
 
-## Paper
+## Design
 
-The paper is another name for a container of data visualizations.
+The paper is a container of plots.
 The following components make up a paper:
 
 * A default data serie name from the [dataStore][] container
@@ -78,13 +72,17 @@ The following components make up a paper:
 * One or more layers
 * One foreground layer for user interactions (canvas paper only)
 
-### Plot
+### Plot design
 
 * One or more layers
 * One scale for each aesthetic mapping used
 * A coordinate system
 
-### Layer
+A **scale** controls the mapping from data to aesthetic attributes, and so we need one scale
+for each aesthetic property used in a layer. Scales are common across layers to ensure a
+consistent mapping from data to aesthetics.
+
+### Layer design
 
 A layer is defined by:
 
@@ -100,7 +98,7 @@ For example a scatterplot layer requires:
 * **stat** (default *identity*)
 * **geom** (default *circle*)
 
-#### Geometric objects
+### Geometric objects
 
 Controls the type of plot that you create.
 These objects are abstract components and can be rendered in different
@@ -114,7 +112,7 @@ a **stat**. They can be divided into groups according to their dimensionality:
 Each **geom** has an associated default **stat** and each stat as an
 associated default geom.
 
-#### Statistical transformation
+### Statistical transformation
 
 | Stat | default geom | description |
 |---|---|---|
@@ -132,40 +130,7 @@ variables to the original dataset.
 
 A source of many statistics is the [d3-array][] library.
 
-## Layout
-
-### Rows
-
-A row is a layout component and it is only used to store information
-about the dashboard layout.
-
-### Columns
-
-A row is composed by one or more columns.
-
-
-## API Reference
-
-### Paper and Layers
-
-#### fluidLayers.add(name, prototype)
-
-Add a new layer to library, The new layer is accessed via
-```javascript
-fluidLayers.get(name)
-```
-
-### Layer
-
-A layer exposes the following API
-
-#### layer.draw(plot, paper, series)
-
-Method called by the **plot** every time it needs to redraw the layer into a **paper**.
-
-### Components
-
-### dataStore
+## dataStore
 
 The datastore object is at the core of the data retrieval and manipulation:
 ```javascript
@@ -189,19 +154,23 @@ If *provider* is not specified, returns the provider registered with *name* if a
 Fetch data from a registered data provider at *name* and return a [Promise][].
 If no data provider is registered for the given name, the promise resolve in an empty list.
 
-## References
-
-* [A Layered Grammar of Graphics](https://assets.fluidily.com/references/wickham-layered-grammar.pdf)
-
 ## Javascript API
 
 ### Paper
 
 #### paper.addPlot(options)
 
+#### paper.clear()
+
+Clear the paper, always called when re-drawing the paper
+
 #### paper.draw()
 
 Draw or re-draw the paper
+
+#### paper.layers
+
+Array of [layers](#layer) which define the plot.
 
 #### paper.resize([size])
 
@@ -216,13 +185,62 @@ Name of the plot
 
 #### plot.paper
 
-The paper the plot belongs to
+The [paper][] the plot belongs to
+
+#### plot.scales
+
+A map of scales available in the plot.
+```javascript
+plot.scales.get('x');       //  x scale
+plot.scales.get('color');   //  color scale
+```
 
 #### plot.type
 
 Type of plot: `scatter`, `line`, `linesp`, `bar`, `pie`, `area`
 
+#### plot.addLayer(options)
+
+Add a new layer object to the plot
+
+#### plot.addScale(options)
+
+Add a new scale object to the plot
+
+#### plot.scaled(mapping, data, scale)
+
+Calculate a ``mapping`` from the ``data`` and apply a given ``scale``.
+
+#### fluidPlots.add(type, options)
+
+Add a new custom plot to the plot collections, *type* is string identifying
+the new plot type while `options` is an object used for customising the
+new plot type.
+
+
+### Layer
+
+#### layer.draw(plot, series)
+
+Method called by the **plot** every time it needs to redraw the layer.
+
+#### fluidLayers.add(name, prototype)
+
+Add a new layer to library, The new layer is accessed via
+```javascript
+fluidLayers.get(name)
+```
+
+### dataStore
+
+
+## References
+
+* [A Layered Grammar of Graphics](https://assets.fluidily.com/references/wickham-layered-grammar.pdf)
+
+
 [Coverage]: https://circleci.com/api/v1/project/quantmind/d3-fluid/latest/artifacts/0/$CIRCLE_ARTIFACTS/coverage/index.html?branch=master&filter=successful
 [Promise]: https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/Promise
 [dataStore]: #dataStore
 [d3-array]: https://github.com/d3/d3-array
+[paper]: #paper

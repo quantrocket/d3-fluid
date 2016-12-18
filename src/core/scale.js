@@ -1,31 +1,60 @@
 import {map} from 'd3-collection';
 import {assign} from 'd3-let';
+import * as d3 from 'd3-scale';
+
+import capfirst from '../utils/capfirst';
 
 
 const scaleProto = {
 
+    scale () {
+        var transform = this.transform || 'linear';
+        var scaleFunction = d3['scale' + capfirst(transform)];
+        var scale = scaleFunction();
+        if (this.nice) scale.nice();
+        return scale.range(this.range());
+    },
+
+    apply (data) {
+        var scale = this.scale();
+        return scale(data);
+    },
+
+    // scale domain, must be implemented by scales
+    range () {}
 };
 
 
 // Scale factory container
 export default assign(map(), {
 
-    add (name, scale) {
+    add (type, scale) {
 
-        function Scale (options) {
-            this.name = name;
-            this.options = options;
+        function Scale (plot, options) {
+            initScale(this, type, plot, options);
         }
 
         Scale.prototype = assign({}, scaleProto, scale);
 
-        this.set(name, Scale);
-        return this.get(name);
-    },
-
-    create (name, options) {
-        var Scale = this.get(name);
-        if (Scale)
-            return new Scale(options);
+        this.set(type, Scale);
+        return this.get(type);
     }
 });
+
+
+function initScale (scale, type, plot, options) {
+    this.options = options;
+
+    Object.defineProperties(scale, {
+        type: {
+            get () {
+                return type;
+            }
+        },
+        plot: {
+            get () {
+                return plot;
+            }
+        }
+    });
+}

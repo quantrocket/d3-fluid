@@ -5,6 +5,7 @@ import {dispatch} from 'd3-dispatch';
 
 import {getSize, boundingBox} from '../utils/size';
 import plots from './plot';
+import layers from './layer';
 import newSheet from './sheet';
 
 
@@ -24,7 +25,9 @@ function Paper (element, options) {
 
     var type = options.type || 'canvas',
         plots = [],
-        config = viewModel(),
+        config = viewModel({
+            layers: {}
+        }),
         sheets = [];
 
     select(element)
@@ -75,7 +78,12 @@ function Paper (element, options) {
     });
     paper.live.push(this);
     paper.events.call('init', this, options);
-    initPlot(this, options);
+
+    layers.each((Layer, type) => {
+        config.layers[type] = config.$new(Layer.prototype.defaults).$update(options[type]);
+    });
+
+    initPlots(this, options);
 }
 
 
@@ -92,9 +100,16 @@ Paper.prototype = paper.prototype = {
         }
     },
 
+    clear () {
+        this.sheets.forEach(function (sheet) {
+            sheet.clear();
+        });
+    },
+
     draw () {
-        this.sheets.forEach(function () {
-            this.draw();
+        this.clear();
+        this.plots.forEach(function (plot) {
+            plot.draw();
         });
     },
 
@@ -133,17 +148,14 @@ Paper.prototype = paper.prototype = {
         return this;
     },
 
-    clear () {
-        this.sheets.forEach(function () {
-            this.clear();
-        });
-    },
-
     destroy () {
         var idx = paper.live.indexOf(this);
         if (idx > -1) {
             paper.live.splice(idx, 1);
             this.config.$off();
+            this.plots.forEach(function (plot) {
+                plot.destroy();
+            });
         }
     }
 };
@@ -163,7 +175,7 @@ function getElement (element) {
 }
 
 
-function initPlot (plot, options) {
+function initPlots (plot, options) {
     //
     // Initialise paper plots
     if (options && options.plots) {

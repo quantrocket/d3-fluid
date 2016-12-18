@@ -38,4 +38,17 @@ function setMargin (options) {
 
 function plotMargin (options) {
     this.margin = this.paper.margin.$child(options.margin);
+
+    Object.defineProperties(this, {
+        innerWidth: {
+            get () {
+                return this.paper.width - this.margin.left - this.margin.right;
+            }
+        },
+        innerHeight: {
+            get () {
+                return this.paper.height - this.margin.top - this.margin.bottom;
+            }
+        },
+    });
 }

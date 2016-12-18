@@ -1,6 +1,6 @@
 import {map} from 'd3-collection';
 import {isPromise, isArray} from 'd3-let';
-import {viewRequire, viewWarn as warn} from 'd3-view';
+import {viewWarn as warn} from 'd3-view';
 
 import providers from './providers';
 
@@ -26,10 +26,17 @@ DataStore.prototype = {
         return this.series.size();
     },
 
-    cf () {
-        return viewRequire(['crossfilter']).then(function (cf) {
-            return cf;
-        });
+    // create a new data mapping from this store
+    map (mapping) {
+        var bits = mapping.split('.'),
+            serie = this.series.get(bits[0]);
+        if (!serie) warn(`unknown serie "${bits[0]}"`);
+        else if (bits.length === 2) {
+            var field = bits[1];
+            return function (i) {
+                return serie[field][i];
+            };
+        }
     },
 
     // Add a new serie from a provider

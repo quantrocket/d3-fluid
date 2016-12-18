@@ -1,18 +1,17 @@
-import {stackOrderNone, stackOffsetNone, area} from 'd3-shape';
+import {area} from 'd3-shape';
+// import {stackOrderNone, stackOffsetNone, area} from 'd3-shape';
 import {curve} from './line';
 
 
 export default {
 
-    defaults () {
-        return {
-            stackOrder: stackOrderNone,
-            stackOffset: stackOffsetNone,
-            fillOpacity: 0.7,
-            colorOpacity: 1,
-            lineWidth: 1,
-            background: true
-        };
+    defaults: {
+        // stackOrder: stackOrderNone,
+        // stackOffset: stackOffsetNone,
+        fillOpacity: 0.7,
+        colorOpacity: 1,
+        lineWidth: 1,
+        background: true
     },
 
     draw (plot, sheet, series) {

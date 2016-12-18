@@ -1,6 +1,6 @@
 import {removePaper} from './utils';
 import {isArray, isObject} from 'd3-let';
-import {fluidPaper} from '../index';
+import {fluidPaper, fluidLayers, fluidPlots} from '../index';
 
 
 describe('fluidPaper', () => {
@@ -26,5 +26,13 @@ describe('fluidPaper', () => {
         expect(paper.margin.top).toBe(20);
         expect(paper.margin.bottom).toBe(20);
         removePaper(paper);
+    });
+
+    it('test layers container', () => {
+        expect(fluidLayers.size()).toBe(3);
+    });
+
+    it('test plots container', () => {
+        expect(fluidPlots.size()).toBe(4);
     });
 });

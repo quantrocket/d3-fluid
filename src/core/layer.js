@@ -12,14 +12,11 @@ const layerProto = {
         return {};
     },
 
-    canDraw (plot, sheet, series) {
-        if (!series || this.broadcast('draw', series).defaultPrevented) return;
-        this.logger.info(`Drawing ${this.name} from series ${series.toString()}`);
-        var current = this.$scope.$currentSeries;
-        this.$scope.$currentSeries = series;
-        return current || true;
+    canDraw (plot, series) {
+        return series ? true : false;
     },
 
+    // must be implemented by layers
     draw () {}
 };
 
@@ -27,22 +24,52 @@ const layerProto = {
 export default assign(map(), {
     events: layerEvents,
 
-    add (name, layer) {
+    add (type, layer) {
 
-        function Layer (options) {
-            this.name = name;
-            this.aesthetics = assign(this.defaults(), options);
+        function Layer (plot, options) {
+            initLayer(this, type, plot, options);
         }
 
         Layer.prototype = assign({}, layerProto, layer);
 
-        this.set(name, Layer);
-        return this.get(name);
-    },
-
-    create (name, options) {
-        var Layer = this.get(name);
-        if (Layer)
-            return new Layer(options);
+        this.set(type, Layer);
+        return this.get(type);
     }
 });
+
+
+// A Plot is the combination is a visualisation on a paper
+export function initLayer (layer, type, plot, options) {
+    var visible = true,
+        config = plot.config.layers[type].$child(options);
+
+    Object.defineProperties(layer, {
+        type: {
+            get () {
+                return type;
+            }
+        },
+        plot: {
+            get () {
+                return plot;
+            }
+        },
+        config: {
+            get () {
+                return config;
+            }
+        },
+        visible: {
+            get () {
+                return visible;
+            },
+            set (value) {
+                if (value !== visible) {
+                    visible = value;
+                }
+            }
+        }
+    });
+
+    layerEvents.call('init', layer, options);
+}
