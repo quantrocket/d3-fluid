@@ -22,8 +22,7 @@ function Paper (element, options) {
     if (!options) options = {};
     element = getElement(element);
 
-    var self = this,
-        type = options.type || 'canvas',
+    var type = options.type || 'canvas',
         plots = [],
         config = viewModel(),
         sheets = [];
@@ -76,14 +75,7 @@ function Paper (element, options) {
     });
     paper.live.push(this);
     paper.events.call('init', this, options);
-    // Initialise paper plots
-    if (options.plots) {
-        var plots = options.plots;
-        if (!isArray(plots)) plots = [plots];
-        plots.forEach(function (opts) {
-            self.addPlot(opts);
-        });
-    }
+    initPlot(this, options);
 }
 
 
@@ -168,4 +160,17 @@ function getElement (element) {
     } if (isFunction(element.node))
         element = element.node();
     return element;
+}
+
+
+function initPlot (plot, options) {
+    //
+    // Initialise paper plots
+    if (options && options.plots) {
+        var plots = options.plots;
+        if (!isArray(plots)) plots = [plots];
+        plots.forEach(function (opts) {
+            plot.addPlot(opts);
+        });
+    }
 }

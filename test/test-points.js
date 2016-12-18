@@ -12,6 +12,8 @@ describe('fluidPaper', () => {
         });
 
         expect(paper.margin.right).toBe(30);
+        expect(paper.plots.length).toBe(1);
+
         removePaper(paper);
     });
 });

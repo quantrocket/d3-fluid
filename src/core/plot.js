@@ -1,6 +1,6 @@
 import {map} from 'd3-collection';
 import {dispatch} from 'd3-dispatch';
-import {assign, isString} from 'd3-let';
+import {assign} from 'd3-let';
 
 
 var plotCount = 0;
