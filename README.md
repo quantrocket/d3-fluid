@@ -43,6 +43,8 @@ reactive data visualization components.
     - [layer.draw(plot, series)](#layerdrawplot-series)
     - [fluidLayers.add(name, prototype)](#fluidlayersaddname-prototype)
   - [dataStore](#datastore-1)
+    - [store.series](#storeseries)
+    - [store.size()](#storesize)
 - [References](#references)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
@@ -240,6 +242,14 @@ fluidLayers.get(name)
 ```
 
 ### dataStore
+
+#### store.series
+
+A d3-map of series (data providers)
+
+#### store.size()
+
+Number of series (data providers) in the data store
 
 
 ## References

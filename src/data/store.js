@@ -26,28 +26,9 @@ DataStore.prototype = {
         return this.series.size();
     },
 
-    // create a new data mapping from this store
-    map (mapping) {
-        var bits = mapping.split('.'),
-            serie = this.series.get(bits[0]);
-        if (!serie) warn(`unknown serie "${bits[0]}"`);
-        else if (bits.length === 2) {
-            var field = bits[1];
-            return function (i) {
-                return serie[field][i];
-            };
-        }
-    },
-
     // Add a new serie from a provider
     add (config) {
-        var serie = providers.create(this, config);
-        if (!serie) warn('Could not add data provider');
-        else {
-            serie.name = serie.name || serie.dataName();
-            this.serie(serie.name, serie);
-            return serie;
-        }
+        return providers.create(this, config);
     },
 
     // set, get or remove a data provider

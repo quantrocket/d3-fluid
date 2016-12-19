@@ -23,16 +23,27 @@ describe('dataStore', () => {
             randomPath: fluidStore.randomPath
         });
         expect(store.model).toBeTruthy();
-        expect(store.model.randomPath).toBeTruthy();
+        expect(store.model.randomPath).toBe(fluidStore.randomPath);
         expect(store.size()).toBe(0);
 
         // add provider to store
-        var provider = store.add('randomPath(300)');
-        expect(provider.name).toBe('default');
-        expect(store.serie('default')).toBe(provider);
+        var serie = store.add('randomPath(300)');
+        expect(serie.name).toBe('default');
+        expect(serie.type).toBe('expression');
+        expect(store.serie('default')).toBe(serie);
         //
         // get the provider data
-        var data = provider.data();
-        expect(isArray(data)).toBe(true);
+        expect(serie.cf).toBeTruthy();
+        expect(serie.size()).toBe(300);
+    });
+
+    it('test array provider', () => {
+        var store = fluidStore(),
+            data = fluidStore.randomPath(20),
+            serie = store.add(data);
+        expect(serie).toBeTruthy();
+        expect(store.size()).toBe(1);
+        expect(serie.size()).toBe(20);
+        expect(serie.name).toBeTruthy();
     });
 });

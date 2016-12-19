@@ -103,7 +103,7 @@ export function initPlot (plot, type, paper, options) {
     var protoLayers = plot.layers,
         plotLayers = [],
         scales = map(),
-        config = paper.config.$new({layers: {}}),
+        config = paper.config.$child({layers: {}}),
         name = options.name;
 
     ++plotCount;

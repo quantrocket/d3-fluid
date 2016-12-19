@@ -1,15 +1,14 @@
-import {isArray} from 'd3-let';
-import crossfilter from 'crossfilter';
+import {isArray, isObject, pop} from 'd3-let';
 
 
 export default {
 
     init (config) {
-        if (isArray(config))
-            this._data = crossfilter(config);
+        if (isArray(config)) return {data: config};
+        else if (isObject(config) && isArray(config.data)) return config;
     },
 
-    data () {
-        return this._data;
+    load () {
+        return pop(this.config, 'data');
     }
 };

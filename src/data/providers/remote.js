@@ -1,26 +1,22 @@
-import {isString, isObject} from 'd3-let';
-
-
-const schemes = ['http', 'https', 'ws', 'wss'];
+import {isObject} from 'd3-let';
+import {viewProviders, viewWarn as warn} from 'd3-view';
+import isUrl from '../../utils/isurl';
 
 
 export default {
 
     init (config) {
-        var opts;
-        if (isUrl(config))
-            opts = {url: config};
+        if (isUrl(config)) return {url: config};
         else if (isObject(config) && config.url)
-            opts = config;
-        if (opts) {
-            this.name = opts.name || this.dataName();
-            this.url = opts.url;
-            return this;
+            return config;
+    },
+
+    load () {
+        var fetch = viewProviders.fetch;
+        if (!fetch) {
+            warn('fetch provider not available, cannot submit');
+            return;
         }
+        return fetch(this.url);
     }
 };
-
-
-function isUrl (value) {
-    return isString(value) && schemes.indexOf(value.split('://')[0]) > -1;
-}

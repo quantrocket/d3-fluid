@@ -1,8 +1,14 @@
 import {map} from 'd3-collection';
-import {assign} from 'd3-let';
+import {dispatch} from 'd3-dispatch';
+import {isPromise, assign, pop} from 'd3-let';
+import {viewWarn as warn} from 'd3-view';
+import crossfilter from 'crossfilter';
 
 
 var dataCount = 0;
+
+
+var dataEvents = dispatch('init', 'data');
 
 
 const providerProto = {
@@ -11,52 +17,132 @@ const providerProto = {
 
     },
 
-    dataName () {
-        var def = this.store.serie('default');
-        if (!def) return 'default';
-        return 'serie' + (++dataCount);
+    size () {
+        return this.cf.size();
+    },
+
+    load () {
+
+    },
+
+    data (cfg, data) {
+        if (arguments.length === 2)
+            return this.add(data);
+        else {
+            var self = this;
+            data = this.load();
+            if (isPromise(data))
+                return data.then((d) => {
+                    self.data(cfg, d);
+                });
+            return this.data(cfg, data);
+        }
+    },
+
+    // create a new data mapping from this data provider
+    map (mapping) {
+        var bits = mapping.split('.'),
+            serie = this.series.get(bits[0]);
+        if (!serie) warn(`unknown serie "${bits[0]}"`);
+        else if (bits.length === 2) {
+            var field = bits[1];
+            return function (i) {
+                return serie[field][i];
+            };
+        }
+    },
+
+    // add data to the serie
+    add (data) {
+        if (!data) return this;
+        var size = this.size();
+        data = data.map((entry) => {
+            if (typeof entry === 'object') data._id = ++size;
+            else data = {_id: ++size, data: data};
+            return data;
+        });
+        this.cf.add(data);
+        dataEvents.call('data', this, data);
+        return this;
     }
 };
 
 // Data providers container
 export default assign(map(), {
+    events: dataEvents,
 
-    add (name, provider) {
+    add (type, provider) {
 
-        function Provider (providers) {
-            initProvider(this, name, providers);
+        function Provider (store, config) {
+            initProvider(this, type, store, config);
         }
 
         Provider.prototype = assign({}, providerProto, provider);
 
-        this.set(name, Provider);
+        this.set(type, Provider);
+        return Provider;
     },
 
     // Create a provider for a dataStore
     create (store, config) {
         var providers = this.values(),
-            serie;
+            cfg;
         for (var i=0; i<providers.length; ++i) {
-            serie = new providers[i](store).init(config);
-            if (serie) return serie;
+            cfg = providers[i].prototype.init(config);
+            if (cfg) return new providers[i](store, cfg);
         }
     }
 });
 
 
-function initProvider(provider, type, store) {
+function initProvider(provider, type, store, config) {
+
+    var name = dataName(store, pop(config, 'name')),
+        cf = crossfilter();
+
+    provider.natural = cf.dimension((d) => {
+        return d._id;
+    });
 
     Object.defineProperties(provider, {
-        type: {
+        cf: {
             get () {
-                return type;
+                return cf;
+            }
+        },
+        name: {
+            get () {
+                return name;
             }
         },
         store: {
             get () {
                 return store;
             }
+        },
+        type: {
+            get () {
+                return type;
+            }
+        },
+        config: {
+            get () {
+                return config;
+            }
         }
     });
 
+    store.series.set(name, provider);
+
+    dataEvents.call('init', provider, config);
+    provider.data();
+}
+
+
+function dataName (store, name) {
+    ++dataCount;
+    if (name) return '' + name;
+    var def = store.serie('default');
+    if (!def) return 'default';
+    return 'serie' + dataCount;
 }

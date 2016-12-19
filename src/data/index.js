@@ -26,6 +26,7 @@ function fluidStore (model) {
 
 fluidStore.prototype = DataStore.prototype;
 fluidStore.providers = providers;
+fluidStore.events = providers.events;
 fluidStore.random = random;
 fluidStore.randomPath = randomPath;
 
