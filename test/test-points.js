@@ -8,9 +8,9 @@ describe('fluidPaper', () => {
         testPoint('canvas');
     });
 
-    it('scatter plot - svg', () => {
-        testPoint('svg');
-    });
+    //it('scatter plot - svg', () => {
+    //    testPoint('svg');
+    //});
 });
 
 

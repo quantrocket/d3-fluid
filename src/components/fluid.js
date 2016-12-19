@@ -1,5 +1,5 @@
 import {viewProviders, viewRequire, viewWarn, viewElement} from 'd3-view';
-import {assign, pop} from 'd3-let';
+import {assign, pop, isObject} from 'd3-let';
 import {select} from 'd3-canvas-transition';
 import {map} from 'd3-collection';
 import {timeout} from 'd3-timer';
@@ -45,13 +45,16 @@ function fetchBuild (vm, src, attr) {
 
 export default {
 
-    model: {
+    props: ["src"],
 
-    },
+    model: {},
 
     render (data, attr) {
-        var src = attr.src;
-        if (src) return fetchBuild(this, src, attr);
+        var src = data.src;
+        if (isObject(src))
+            return this.build(src, attr);
+        else if(src)
+            return fetchBuild(this, src, attr);
     },
 
     build (config) {
@@ -69,7 +72,7 @@ export default {
                 paper: config
             };
         }
-        var board = new Dashboard(dashboard, config);
+        var board = new Dashboard(dashboard, config, store);
         timeout(() => {
             board.papers.each((paper) => {
                 paper.draw();
@@ -80,12 +83,13 @@ export default {
 };
 
 
-function Dashboard(layout, config) {
+function Dashboard(layout, config, store) {
     this.container = viewElement('<div class="container-fluid"></div>');
     this.papers = map();
 
     var container = select(this.container),
-        papers = this.papers;
+        papers = this.papers,
+        options;
 
     if (!layout.rows) layout = {rows: [layout]};
     var rows = container
@@ -113,7 +117,10 @@ function Dashboard(layout, config) {
             if (col.aspect)
                 el.attr('data-aspect-ratio', col.aspect);
             if (col.paper) {
-                papers.set(col.paper, paper(el, config[col.paper]));
+                options = assign({}, config[col.paper], {
+                    dataStore: store
+                });
+                papers.set(col.paper, paper(el, options));
             }
             return el.node();
         });

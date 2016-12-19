@@ -181,14 +181,14 @@ function getElement (element) {
 }
 
 
-function initPlots (plot, options) {
+function initPlots (paper, options) {
     //
     // Initialise paper plots
     if (options && options.plots) {
         var plots = options.plots;
         if (!isArray(plots)) plots = [plots];
         plots.forEach(function (opts) {
-            plot.addPlot(opts);
+            paper.addPlot(opts);
         });
     }
 }
