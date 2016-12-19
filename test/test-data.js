@@ -1,6 +1,5 @@
 import './utils';
 import {fluidStore} from '../index';
-import {isArray} from 'd3-let';
 
 
 describe('dataStore', () => {

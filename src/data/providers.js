@@ -40,7 +40,7 @@ const providerProto = {
     },
 
     // create a new data mapping from this data provider
-    map (mapping) {
+    mapping (mapping) {
         var bits = mapping.split('.'),
             serie = this.series.get(bits[0]);
         if (!serie) warn(`unknown serie "${bits[0]}"`);

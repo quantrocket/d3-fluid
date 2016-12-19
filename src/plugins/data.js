@@ -11,7 +11,7 @@ paper.events.on('init.data', function (options) {
 });
 
 plots.events.on('init.data', function (options) {
-    if (options.dataSource) this.config.$set('dataSource', source);
+    if (options.dataSource) this.config.$set('dataSource', options.dataSource);
     Object.defineProperties(this, {
         dataStore: {
             get () {
