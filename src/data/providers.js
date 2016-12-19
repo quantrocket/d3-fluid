@@ -1,7 +1,6 @@
 import {map} from 'd3-collection';
 import {dispatch} from 'd3-dispatch';
 import {isPromise, assign, pop} from 'd3-let';
-import {viewWarn as warn} from 'd3-view';
 import crossfilter from 'crossfilter';
 
 
@@ -36,19 +35,6 @@ const providerProto = {
                     self.data(cfg, d);
                 });
             return this.data(cfg, data);
-        }
-    },
-
-    // create a new data mapping from this data provider
-    mapping (mapping) {
-        var bits = mapping.split('.'),
-            serie = this.series.get(bits[0]);
-        if (!serie) warn(`unknown serie "${bits[0]}"`);
-        else if (bits.length === 2) {
-            var field = bits[1];
-            return function (i) {
-                return serie[field][i];
-            };
         }
     },
 

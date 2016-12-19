@@ -4,6 +4,7 @@ import scales from './core/scale';
 import points from './layers/points';
 import line from './layers/line';
 import area from './layers/area';
+import './plugins/index';
 
 // Built-in layers
 layers.add('points', points);

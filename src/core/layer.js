@@ -1,6 +1,7 @@
 import {map} from 'd3-collection';
 import {dispatch} from 'd3-dispatch';
 import {assign} from 'd3-let';
+import {viewUid} from 'd3-view';
 
 
 var layerEvents = dispatch('init', 'before-draw', 'after-draw');
@@ -8,12 +9,8 @@ var layerEvents = dispatch('init', 'before-draw', 'after-draw');
 
 const layerProto = {
 
-    defaults () {
-        return {};
-    },
-
-    canDraw (plot, series) {
-        return series ? true : false;
+    canDraw (serie) {
+        return serie ? true : false;
     },
 
     // must be implemented by layers
@@ -43,7 +40,7 @@ export function initLayer (layer, type, plot, options) {
     var visible = true,
         config = plot.config.layers[type].$child(options);
 
-    Object.defineProperties(layer, {
+    Object.defineProperties(viewUid(layer), {
         type: {
             get () {
                 return type;

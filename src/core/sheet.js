@@ -1,3 +1,4 @@
+import {selection, select} from 'd3-canvas-transition';
 import {assign} from 'd3-let';
 
 
@@ -12,19 +13,19 @@ function Svg (paper) {
 
 function Canvas (paper) {
     initSheet(this, paper);
-
-    var c = paper.container,
-        canvas = c.append('canvas').classed('d3-layer', true),
-        node = canvas.node();
-
-    var position = c.select('canvas').node() === node ? 'relative' : 'absolute';
-        canvas
-            .style('position', position)
-            .style('top', 0)
-            .style('left', 0);
 }
 
 function initSheet (sheet, paper) {
+    var c = paper.container,
+        selection = c.append(paper.type).classed('d3-sheet', true),
+        node = selection.node(),
+        position = c.select(paper.type).node() === node ? 'relative' : 'absolute',
+        element = sheet.createElement(node, paper);
+
+    selection
+        .style('position', position)
+        .style('top', 0)
+        .style('left', 0);
 
     Object.defineProperties(sheet, {
         paper: {
@@ -36,12 +37,29 @@ function initSheet (sheet, paper) {
             get () {
                 return paper.type;
             }
+        },
+        element: {
+            get () {
+                return element;
+            }
+        },
+        node: {
+            get () {
+                return node;
+            }
         }
     });
 }
 
 
-Svg.proptotype = {
+Svg.prototype = {
+    createElement (node) {
+        return node;
+    },
+
+    sel () {
+        return select(this.element);
+    },
 
     toJson () {
 
@@ -53,7 +71,11 @@ Svg.proptotype = {
 };
 
 
-Canvas.prototype = assign({}, Svg.proptotype, {
+Canvas.prototype = assign({}, Svg.prototype, {
+
+    createElement (node, paper) {
+        return selection(node.getContext('2d'), paper.config.factor).node();
+    },
 
     gradient () {
 

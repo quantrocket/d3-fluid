@@ -6,27 +6,31 @@ export default {
     defaults: {
         symbol: 'circle',
         fill: true,
+        color: true,
         fillOpacity: 1,
         colorOpacity: 1,
         lineWidth: 2,
         size: 60
     },
 
-    aesthetics: ['x', 'y', 'symbol', 'size', 'fill', 'color'],
-
-    draw (plot, data) {
+    draw (serie) {
         var cfg = this.config,
-            x = plot.scaled(this.mapping.x, data, 'x'),
-            y = plot.scaled(this.mapping.y, data, 'y'),
-            size = plot.scaled(this.mapping.size, data, 'xy'),
-            color = plot.scaled(this.mapping.color, data, 'color'),
-            fill = plot.scaled(this.mapping.fill, data, 'fill'),
-            type = data.map(this.mapping.symbol, cfg.symbol),
+            plot = this.plot,
+            data = serie.natural.top(Infinity),
+            mapping = this.mapping,
+            x = plot.mapper(mapping.x, 'x'),
+            y = plot.mapper(mapping.y, 'y'),
+            size = cfg.size, //plot.mapper(mapping.size, 'xy', cfg.size),
+            color = plot.mapper(mapping.color, 'color', cfg.color),
+            fill = plot.mapper(mapping.fill, 'fill', cfg.fill),
+            type = cfg.symbol, //plot.mapper(mapping.symbol, null, cfg.symbol),
+            fillOpacity = plot.mapper(mapping.fillOpacity, null, cfg.fillOpacity),
+            strokeOpacity = plot.mapper(mapping.colorOpacity, null, cfg.colorOpacity),
+            lineWidth = plot.mapper(mapping.lineWidth, null, cfg.lineWidth),
             marks = symbol().size(size).type(type),
-            fillOpacity = data.map(this.mapping.fillOpacity, cfg.fillOpacity),
-            strokeOpacity = data.map(this.mapping.colorOpacity, cfg.colorOpacity),
-            path = plot.path(this).data([data]),
-            merge = plot.transition('update');
+            group = plot.group(this),
+            path = group.selectAll('path.points').data(data);
+            //merge = plot.transition(this, 'update');
 
         path
             .enter()
@@ -37,9 +41,9 @@ export default {
                 .attr('fill-opacity', 0)
                 .attr('stroke', color)
                 .attr('stroke-opacity', 0)
-                .attr('stroke-width', cfg.lineWidth)
+                .attr('stroke-width', lineWidth)
             .merge(path)
-                .transition(merge)
+                //.transition(merge)
                 .attr('transform', plot.translate(x, y))
                 .attr('fill', fill)
                 .attr('fill-opacity', fillOpacity)

@@ -1,16 +1,17 @@
 import {map} from 'd3-collection';
 import {dispatch} from 'd3-dispatch';
-import {viewProviders, viewWarn as warn} from 'd3-view';
+import {viewUid, viewProviders, viewWarn as warn} from 'd3-view';
 import {assign, isString} from 'd3-let';
 
 import layers from './layer';
 import scales from './scale';
+import translate from '../utils/translate';
 
 var plotCount = 0;
 var plotEvents = dispatch('init', 'before-draw', 'after-draw');
 
 
-const plotProto = {
+var plotProto = {
     layers: [],
 
     addLayer (options) {
@@ -37,39 +38,55 @@ const plotProto = {
         }
     },
 
-    // get the data serie associated with this plot
-    getSeries () {
-        return this.paper.data;
-    },
-
     // Return a group element for a plot layer
-    group (paper, layer) {
-        var sheet = paper.plotSheet;
-        var group = sheet.selection().selectAll('.' + layer.uid).data([layer]);
-        return group;
+    group (layer, tag) {
+        var sheet = this.paper.sheet(layer),
+            group = sheet.sel().selectAll('#' + layer.uid).data([layer]);
+
+        return group
+            .enter()
+                .append(tag || 'g')
+                .attr('id', layer.uid)
+            .merge(group)
+                .attr('transform', translate(this.margin.left, this.margin.top));
     },
 
     // Draw a plot on a paper
     draw () {
         var plot = this,
-            series = this.getSeries();
+            serie;
 
         this.layers.forEach((layer) => {
-            if (layer.canDraw(plot, series)) {
-                layers.events.call('before-draw', layer, plot, series);
-                viewProviders.logger.info(`Drawing ${layer.type} layer from series ${series.toString()}`);
-                layer.draw(plot, series);
-                layers.events.call('after-draw', layer, plot, series);
+            serie = plot.dataStore.serie(plot.config.dataSource);
+            if (layer.visible && layer.canDraw(serie)) {
+                layers.events.call('before-draw', layer, serie);
+                viewProviders.logger.info(`Drawing ${layer.type} layer from series ${serie.name}`);
+                layer.draw(serie);
+                layers.events.call('after-draw', layer, serie);
             }
         });
     },
 
-    scaled (mapping, data, scale) {
-        var plotScale = this.scales.get(scale);
-        var mapped = data.map(mapping);
-        if (!plotScale) warn(`plot scale "${scale}" not available`);
-        else mapped = plotScale.apply(mapped);
-        return mapped;
+    mapper (mapping, scale, def) {
+        var plotScale;
+        if (scale) {
+            plotScale = this.scales.get(scale);
+            if (!plotScale) warn(`plot scale "${scale}" not available`);
+        }
+        return function (d) {
+            var value = d[mapping];
+            if (value === undefined) value = def;
+            if (plotScale) value = plotScale.apply(value);
+            return value;
+        };
+    },
+
+    translate (x, y) {
+        return function (d) {
+            var xt = x(d) || 0,
+                yt = y(d) || 0;
+            return `translate(${xt}, ${yt})`;
+        };
     },
 
     destroy () {
@@ -82,7 +99,7 @@ const plotProto = {
 // Plot factory object
 export default assign(map(), {
     events: plotEvents,
-
+    proto: plotProto,
     //
     // add a new plot class to the factory
     add (type, plot) {
@@ -91,7 +108,7 @@ export default assign(map(), {
             initPlot(this, type, paper, options);
         }
 
-        Plot.prototype = assign({}, plotProto, plot);
+        Plot.prototype = assign({}, this.proto, plot);
 
         this.set(type, Plot);
     }
@@ -110,7 +127,7 @@ export function initPlot (plot, type, paper, options) {
 
     if (!name) name = 'plot' + plotCount;
 
-    Object.defineProperties(plot, {
+    Object.defineProperties(viewUid(plot), {
         config: {
             get () {
                 return config;

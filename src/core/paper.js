@@ -100,6 +100,12 @@ Paper.prototype = paper.prototype = {
         }
     },
 
+    sheet () {
+        if (!this._mainSheet)
+            this._mainSheet = this.addSheet();
+        return this._mainSheet;
+    },
+
     clear () {
         this.sheets.forEach(function (sheet) {
             sheet.clear();

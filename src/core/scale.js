@@ -30,8 +30,8 @@ export default assign(map(), {
 
     add (type, scale) {
 
-        function Scale (plot, options) {
-            initScale(this, type, plot, options);
+        function Scale (options) {
+            initScale(this, type, options);
         }
 
         Scale.prototype = assign({}, scaleProto, scale);
@@ -42,18 +42,13 @@ export default assign(map(), {
 });
 
 
-function initScale (scale, type, plot, options) {
-    this.options = options;
+function initScale (scale, type, options) {
+    scale.options = options || {};
 
     Object.defineProperties(scale, {
         type: {
             get () {
                 return type;
-            }
-        },
-        plot: {
-            get () {
-                return plot;
             }
         }
     });

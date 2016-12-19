@@ -1,6 +1,5 @@
 import json from 'rollup-plugin-json';
 import babel from 'rollup-plugin-babel';
-import commonjs from 'rollup-plugin-commonjs';
 
 
 export default {
@@ -13,15 +12,11 @@ export default {
         babel({
             babelrc: false,
             presets: ['es2015-rollup']
-        }),
-        commonjs({
-            include: [
-                'node_modules/crossfilter/**'
-            ]
         })
     ],
     dest: 'build/d3-fluid.js',
     globals: {
+        "crossfilter": "crossfilter",
         "d3-array": "d3",
         "d3-canvas-transition": "d3",
         "d3-collection": "d3",

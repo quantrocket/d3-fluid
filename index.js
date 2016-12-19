@@ -6,4 +6,3 @@ export {default as fluidScales} from './src/core/scale';
 export {default as fluidPlots} from './src/core/plot';
 export {version as fluidVersion} from './package.json';
 import './src/defaults';
-import './src/plugins/index';
