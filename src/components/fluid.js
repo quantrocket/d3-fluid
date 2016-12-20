@@ -2,7 +2,6 @@ import {viewProviders, viewRequire, viewWarn, viewElement} from 'd3-view';
 import {assign, pop, isObject} from 'd3-let';
 import {select} from 'd3-canvas-transition';
 import {map} from 'd3-collection';
-import {timeout} from 'd3-timer';
 
 import fluidStore from '../data/index';
 import paper from '../core/paper';
@@ -72,13 +71,14 @@ export default {
                 paper: config
             };
         }
-        var board = new Dashboard(dashboard, config, store);
-        timeout(() => {
-            board.papers.each((paper) => {
-                paper.draw();
-            });
+        this.board = new Dashboard(dashboard, config, store);
+        return this.board.container;
+    },
+
+    mounted () {
+        this.board.papers.each((paper) => {
+            paper.draw();
         });
-        return board.container;
     }
 };
 

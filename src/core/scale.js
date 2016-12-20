@@ -12,15 +12,15 @@ const scaleProto = {
         var scaleFunction = d3['scale' + capfirst(transform)];
         var scale = scaleFunction();
         if (this.nice) scale.nice();
-        return scale.range(this.range());
+        return scale.range(this.range()).domain(this.domain());
     },
 
-    apply (data) {
-        var scale = this.scale();
-        return scale(data);
+    // return the scale range, must be implemented by scales
+    domain () {
+        return this.plot.coord[this.type];
     },
 
-    // scale domain, must be implemented by scales
+    // return the scale range, must be implemented by scales
     range () {}
 };
 
@@ -30,8 +30,8 @@ export default assign(map(), {
 
     add (type, scale) {
 
-        function Scale (options) {
-            initScale(this, type, options);
+        function Scale (plot, options) {
+            initScale(this, type, plot, options);
         }
 
         Scale.prototype = assign({}, scaleProto, scale);
@@ -42,13 +42,18 @@ export default assign(map(), {
 });
 
 
-function initScale (scale, type, options) {
+function initScale (scale, type, plot, options) {
     scale.options = options || {};
 
     Object.defineProperties(scale, {
         type: {
             get () {
                 return type;
+            }
+        },
+        plot: {
+            get () {
+                return plot;
             }
         }
     });

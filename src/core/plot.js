@@ -5,6 +5,7 @@ import {assign, isString} from 'd3-let';
 
 import layers from './layer';
 import scales from './scale';
+import coords from './coord';
 import translate from '../utils/translate';
 
 var plotCount = 0;
@@ -27,12 +28,11 @@ var plotProto = {
         }
     },
 
-    addScale (options) {
-        if (isString(options)) options = {type: options};
-        var Scale = scales.get(options.type);
-        if (!Scale) warn(`Scale type "${options.type}" not available`);
+    addScale (type, options) {
+        var Scale = scales.get(type);
+        if (!Scale) warn(`Scale type "${type}" not available`);
         else {
-            var scale = new Scale(options);
+            var scale = new Scale(this, options);
             this.scales.set(scale.type, scale);
             return scale;
         }
@@ -41,7 +41,7 @@ var plotProto = {
     // Return a group element for a plot layer
     group (layer, tag) {
         var sheet = this.paper.sheet(layer),
-            group = sheet.sel().selectAll('#' + layer.uid).data([layer]);
+            group = sheet.sel.selectAll('#' + layer.uid).data([layer]);
 
         return group
             .enter()
@@ -54,10 +54,18 @@ var plotProto = {
     // Draw a plot on a paper
     draw () {
         var plot = this,
-            serie;
+            serie = plot.dataStore.serie(plot.config.dataSource);
+
+        if (!serie) return;
+        //
+        // This is the data/filtering for the plot
+        // Need to generalise this step
+        var data = serie.natural.top(Infinity);
+
+        // find domain of scales
+        this.coord.domains(data);
 
         this.layers.forEach((layer) => {
-            serie = plot.dataStore.serie(plot.config.dataSource);
             if (layer.visible && layer.canDraw(serie)) {
                 layers.events.call('before-draw', layer, serie);
                 viewProviders.logger.info(`Drawing ${layer.type} layer from series ${serie.name}`);
@@ -68,15 +76,18 @@ var plotProto = {
     },
 
     mapper (mapping, scale, def) {
-        var plotScale;
+        var plotScale,
+            field = mapping ? mapping.from : null;
+
         if (scale) {
             plotScale = this.scales.get(scale);
             if (!plotScale) warn(`plot scale "${scale}" not available`);
+            else plotScale = plotScale.scale();
         }
         return function (d) {
-            var value = d[mapping];
+            var value = d[field];
             if (value === undefined) value = def;
-            if (plotScale) value = plotScale.apply(value);
+            if (plotScale) value = plotScale(value);
             return value;
         };
     },
@@ -119,8 +130,9 @@ export default assign(map(), {
 export function initPlot (plot, type, paper, options) {
     var protoLayers = plot.layers,
         plotLayers = [],
-        scales = map(),
+        plotScales = map(),
         config = paper.config.$child({layers: {}}),
+        coord = coords.create(plot, options.coord),
         name = options.name;
 
     ++plotCount;
@@ -150,7 +162,12 @@ export function initPlot (plot, type, paper, options) {
         },
         scales: {
             get () {
-                return scales;
+                return plotScales;
+            }
+        },
+        coord: {
+            get () {
+                return coord;
             }
         },
         type: {
@@ -161,6 +178,8 @@ export function initPlot (plot, type, paper, options) {
     });
 
     plotEvents.call('init', plot, options);
+
+    addScales(plot, options.scales || {});
 
     protoLayers.forEach(function (opts) {
         if (isString(opts)) opts = {type: opts};
@@ -174,4 +193,11 @@ export function initPlot (plot, type, paper, options) {
 function addLayerConfig (plot, type, options) {
     var cfg = plot.config.layers[type];
     if (!cfg) plot.config.layers[type] = plot.paper.config.layers[type].$child(options);
+}
+
+
+function addScales (plot, options) {
+    scales.each((scale, type) => {
+        plot.addScale(type, options[scale.type]);
+    });
 }

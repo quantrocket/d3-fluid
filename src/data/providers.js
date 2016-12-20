@@ -43,9 +43,9 @@ const providerProto = {
         if (!data) return this;
         var size = this.size();
         data = data.map((entry) => {
-            if (typeof entry === 'object') data._id = ++size;
-            else data = {_id: ++size, data: data};
-            return data;
+            if (typeof entry === 'object') entry._id = ++size;
+            else entry = {_id: ++size, data: entry};
+            return entry;
         });
         this.cf.add(data);
         dataEvents.call('data', this, data);

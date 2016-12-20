@@ -1,4 +1,6 @@
-import {symbol} from 'd3-shape';
+import capfirst from '../utils/capfirst';
+
+import * as d3 from 'd3-shape';
 
 
 export default {
@@ -20,14 +22,14 @@ export default {
             mapping = this.mapping,
             x = plot.mapper(mapping.x, 'x'),
             y = plot.mapper(mapping.y, 'y'),
-            size = cfg.size, //plot.mapper(mapping.size, 'xy', cfg.size),
+            size = plot.mapper(mapping.size, 'xy', cfg.size),
             color = plot.mapper(mapping.color, 'color', cfg.color),
             fill = plot.mapper(mapping.fill, 'fill', cfg.fill),
-            type = cfg.symbol, //plot.mapper(mapping.symbol, null, cfg.symbol),
+            type = plot.mapper(mapping.symbol, null, cfg.symbol),
             fillOpacity = plot.mapper(mapping.fillOpacity, null, cfg.fillOpacity),
             strokeOpacity = plot.mapper(mapping.colorOpacity, null, cfg.colorOpacity),
             lineWidth = plot.mapper(mapping.lineWidth, null, cfg.lineWidth),
-            marks = symbol().size(size).type(type),
+            marks = d3.symbol().size(size).type(symbol(type)),
             group = plot.group(this),
             path = group.selectAll('path.points').data(data);
             //merge = plot.transition(this, 'update');
@@ -56,3 +58,12 @@ export default {
             .remove();
     }
 };
+
+
+function symbol (get) {
+    var s;
+    return function () {
+        s = get.apply(this, arguments);
+        return d3['symbol' + capfirst(s)];
+    };
+}

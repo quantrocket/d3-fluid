@@ -1,9 +1,11 @@
 import layers from './core/layer';
 import plots from './core/plot';
 import scales from './core/scale';
+import coords from './core/coord';
 import points from './layers/points';
 import line from './layers/line';
 import area from './layers/area';
+import * as d3 from 'd3-scale';
 import './plugins/index';
 
 // Built-in layers
@@ -27,6 +29,14 @@ scales.add('x', {
     }
 });
 
+scales.add('-x', {
+    nice: true,
+
+    range () {
+        return [this.plot.innerWidth, 0];
+    }
+});
+
 scales.add('y', {
     nice: true,
 
@@ -35,10 +45,40 @@ scales.add('y', {
     }
 });
 
-scales.add('color', {
+scales.add('xy', {
     nice: true,
 
     domain () {
+        return [0, 100];
+    },
 
+    range () {
+        return [0, Math.min(this.plot.innerWidth, this.plot.innerHeight)];
+    }
+});
+
+scales.add('color', {
+    domain () {
+        return [0, 1];
+    },
+
+    range () {
+        return d3.schemeCategory20;
+    }
+});
+
+coords.add('cartesian', {
+    axes: ['x', 'y']
+});
+
+coords.add('cartesianFlipped', {
+    axes: ['y', 'x']
+});
+
+// polar coordinate system
+coords.add('polar', {
+    axes: ['x', 'y'],
+    x: {
+        range: [0, 2*Math.PI]
     }
 });

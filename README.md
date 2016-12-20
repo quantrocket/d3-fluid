@@ -7,6 +7,8 @@ Reactive data visualization components
 
 [Coverage][]
 
+**PRE ALPHA - DONT USE IT**
+
 This is a [d3 plugin](https://bost.ocks.org/mike/d3-plugin/) containing
 reactive data visualization components.
 
@@ -25,11 +27,15 @@ reactive data visualization components.
 - [dataStore](#datastore)
 - [Javascript API](#javascript-api)
   - [Paper](#paper)
+    - [paper.size](#papersize)
+    - [paper.height](#paperheight)
+    - [paper.width](#paperwidth)
     - [paper.addPlot(options)](#paperaddplotoptions)
     - [paper.clear()](#paperclear)
     - [paper.draw()](#paperdraw)
     - [paper.resize([size])](#paperresizesize)
   - [Plot](#plot)
+    - [plot.coord](#plotcoord)
     - [plot.layers](#plotlayers)
     - [plot.name](#plotname)
     - [plot.paper](#plotpaper)
@@ -91,6 +97,14 @@ The following components make up a paper:
 A **scale** controls the mapping from data to aesthetic attributes, and so we need one scale
 for each aesthetic property used in a layer. Scales are common across layers to ensure a
 consistent mapping from data to aesthetics.
+
+A plot JSON document:
+```javascript
+{
+    "layers": [],
+    "coord": "cartesian"
+}
+```
 
 ### Layer design
 
@@ -168,6 +182,19 @@ If no data provider is registered for the given name, the promise resolve in an 
 
 ### Paper
 
+#### paper.size
+
+Size of the paper ``[width, height]`` in pixels.
+
+#### paper.height
+
+Width of the paper in pixels, same as ``paper.size[1]``.
+
+#### paper.width
+
+Width of the paper in pixels, same as ``paper.size[0]``.
+
+
 #### paper.addPlot(options)
 
 #### paper.clear()
@@ -184,6 +211,10 @@ Resize the paper if it needs resizing
 
 
 ### Plot
+
+#### plot.coord
+
+The coordinate system of the plot.
 
 #### plot.layers
 

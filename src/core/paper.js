@@ -9,6 +9,9 @@ import layers from './layer';
 import newSheet from './sheet';
 
 
+var paperCount = 0;
+
+
 export default function paper (element, options) {
     if (arguments.length === 1 && isObject(element)) {
         options = element;
@@ -22,6 +25,7 @@ export default function paper (element, options) {
 function Paper (element, options) {
     if (!options) options = {};
     element = getElement(element);
+    ++paperCount;
 
     var type = options.type || 'canvas',
         plots = [],
@@ -36,8 +40,12 @@ function Paper (element, options) {
             .classed('d3-paper', true)
             .classed('d3-paper-' + type, true);
 
-    this.name = options.name || '<noname>';
-    assign(this, getSize(element, options));
+    this.name = options.name || `paper${paperCount}`;
+
+    // size of paper
+    this.fitToElement = function () {
+        assign(this, getSize(this.element, options));
+    };
 
     Object.defineProperties(this, {
         plots: {
@@ -113,7 +121,13 @@ Paper.prototype = paper.prototype = {
     },
 
     draw () {
-        this.clear();
+        if (!this.drawCount) {
+            this.drawCount = 1;
+            this.fitToElement();
+        } else {
+            this.drawCount++;
+            this.clear();
+        }
         this.plots.forEach(function (plot) {
             plot.draw();
         });

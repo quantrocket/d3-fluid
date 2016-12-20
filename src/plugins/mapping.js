@@ -11,17 +11,20 @@ layers.events.on('init.mapping', layerMapping);
 
 const defaultMapping = {
     x: {
-        from: 'default.x'
+        from: 'x'
     },
     y: {
-        from: 'default.y'
+        from: 'y'
     },
     theta: {
-        from: 'default.theta'
+        from: 'theta'
     },
     radius: {
-        from: 'default.theta'
+        from: 'radius'
     },
+    color: {
+        from: 'color'
+    }
 };
 
 
